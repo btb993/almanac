@@ -1,5 +1,5 @@
 // Almanac service worker: makes the app open offline.
-const CACHE = 'almanac-v1';
+const CACHE = 'almanac-v2';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon.svg'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

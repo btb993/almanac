@@ -297,6 +297,57 @@ textarea{min-height:90px;resize:vertical}
 .warn{background:#ff6b5a22;border:1px solid #ff6b5a;border-radius:14px;padding:14px 16px;font-size:15px}
 .ok{color:light-dark(#1d7a3a,#7fdc9a);font-weight:700;font-size:14px}
 @media(prefers-reduced-motion:reduce){.skel{animation:none}body{transition:none}}
+
+/* ============ SHELF: the den where your books, games and shows live ============ */
+body[data-v=shelf]{color-scheme:dark;--bg:#24180f;--card:#33241a;--ink:#f6ead8;--mute:#cdb79b;--line:#ffffff1c;--acc:#ffb35c;--acc-ink:#ffc785;--barbg:#1a110a;--barink:#f6ead8;background:radial-gradient(ellipse at 20% -10%,#5a3b22 0%,#24180f 60%) fixed,#24180f}
+.den{padding-block:26px 40px}
+.den h1{font:600 clamp(32px,5vw,52px)/1.05 var(--lit);margin:0 0 6px;letter-spacing:-.02em}
+.den .src{color:var(--mute);margin:0 0 22px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.den .src button{background:transparent;border:1px solid var(--line);border-radius:999px;color:var(--ink);padding:6px 14px;min-height:36px;cursor:pointer;font-weight:700;font-size:13px}
+.den h2{font:600 24px/1.2 var(--lit);margin:30px 0 14px}
+.nowg{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.nowc{display:grid;grid-template-columns:86px minmax(0,1fr);gap:16px;background:#ffffff0d;border:1px solid var(--line);border-radius:18px;padding:16px;text-decoration:none;color:inherit;align-items:center}
+.nowc:hover{background:#ffffff14}
+.nowc .cv{aspect-ratio:2/3;border-radius:4px;overflow:hidden;box-shadow:0 10px 18px -8px #000a;background:#000}
+.nowc small{color:var(--acc-ink);font-weight:800;font-size:12.5px}
+.nowc h3{font:600 18px/1.25 var(--lit);margin:2px 0 2px}
+.nowc p{margin:0;color:var(--mute);font-size:14px}
+.prog{height:8px;border-radius:99px;background:#ffffff1a;margin-top:10px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--acc);border-radius:99px}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr))}
+.stat{background:#ffffff0a;border-radius:16px;padding:14px 16px}
+.stat b{display:block;font:600 clamp(28px,4vw,38px)/1 var(--lit);color:#ffd9a8;font-variant-numeric:tabular-nums}
+.stat span{font-size:14px;color:var(--mute)}
+.shelfrow{margin-top:8px}
+.shelfrow h3{font:600 18px var(--lit);margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.shelfrow h3 a{font:700 13px var(--ui);color:var(--acc-ink)}
+.ledge{display:flex;gap:14px;overflow-x:auto;padding:4px 6px 0;scroll-snap-type:x mandatory;align-items:flex-end;min-height:150px}
+.ledge+.wood{height:16px;border-radius:3px;background:linear-gradient(#8a5a33,#5e3b1f 60%,#3d2512);box-shadow:0 10px 14px -6px #000c;margin-bottom:26px}
+.spine{flex:none;width:clamp(78px,10vw,104px);scroll-snap-align:start;text-decoration:none;color:inherit}
+.spine .cv{aspect-ratio:2/3;border-radius:3px 5px 5px 3px;overflow:hidden;box-shadow:0 8px 12px -6px #000c;background:#000;transition:transform .2s}
+.spine:hover .cv{transform:translateY(-6px)}
+@media(prefers-reduced-motion:reduce){.spine .cv{transition:none}}
+.spine p{margin:6px 0 0;font-size:12.5px;line-height:1.25;color:var(--mute);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cv .gen{font-size:14px;padding:8px}
+.cv img{width:100%;height:100%;object-fit:cover;display:block}
+.recent{list-style:none;margin:0;padding:0;display:grid;gap:0;grid-template-columns:minmax(0,1fr)}
+@media(min-width:760px){.recent{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}}
+.recent li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.recent .k{font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;background:#ffffff14;color:var(--acc-ink);white-space:nowrap}
+.recent .d{font-size:13px;color:var(--mute);white-space:nowrap}
+.recent b{font-weight:700}
+.apps{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.apps a{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;background:#ffffff12;text-decoration:none;font-weight:700;min-height:44px}
+.apps a:hover{background:#ffffff22}
+.signin{max-width:460px;background:#ffffff0d;border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:12px}
+.signin input{font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#00000033;color:var(--ink);min-height:46px;width:100%}
+/* today: right-now strip */
+.nowstrip{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));padding-top:18px}
+.nowstrip a{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px;text-decoration:none}
+.nowstrip .cv{aspect-ratio:2/3;border-radius:3px;overflow:hidden;background:#000}
+.nowstrip small{font-size:12px;font-weight:800;color:var(--acc-ink)}
+.nowstrip b{display:block;font:600 15px/1.25 var(--lit);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowstrip span{font-size:13px;color:var(--mute)}
 </style>
 </head>
 <body data-v="today">
@@ -307,6 +358,7 @@ textarea{min-height:90px;resize:vertical}
     <a href="#today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</a>
     <a href="#news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>News</a>
     <a href="#sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg>Sky</a>
+    <a href="#shelf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3.5-1 2.5 15-3.5 1z"/></svg>Shelf</a>
     <a href="#releases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>Releases</a>
     <a href="#saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved</a>
   </nav>
@@ -1073,6 +1125,7 @@ function viewToday(){
     <div class="meta"><span>Sun in ${ss}</span><span>Moon in ${ms}</span><span>${visits.streak} day${visits.streak===1?'':'s'} in a row</span></div>
   </div>
   <figure class="bigmoon"><svg viewBox="-60 -60 120 120" role="img" aria-label="${esc(m.name)}">${m.svg}</svg><figcaption><b>${esc(m.name)}</b>${m.ill}% lit</figcaption></figure></div></section>
+  <div class="wrap"><div class="nowstrip" id="nowstrip"></div></div>
   <div class="wrap tgrid">
    <div class="col">
     <article class="pane c-fact"><p class="label">Did you know?</p><div class="tools">${shuf('fact')}${saveBtn({id:'f:'+fa.slice(0,40),kind:'Fact',title:'Did you know?',text:fa})}</div><p class="q">${esc(fa)}</p></article>
@@ -1093,6 +1146,7 @@ function viewToday(){
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-shuf]');if(!b)return;const k=b.dataset.shuf,arr={poem:POEMS,fact:FACTS,hist:HISTORY,word:WORDS,q:QUESTIONS}[k];let i;do{i=Math.floor(Math.random()*arr.length)}while(arr.length>1&&i===shuffled[k]);shuffled[k]=i;const y=scrollY;render();scrollTo(0,y)});
 function fillToday(){
+  fillNowStrip();
   getJSON(`https://en.wikipedia.org/api/rest_v1/feed/featured/${wikiPath()}`,'wf:'+TODAY,6).then(j=>{
     const o=$('#otd');if(o){const ev=(j.onthisday||[]).slice(0,6);o.innerHTML=ev.length?ev.map(x=>`<li><b>${esc(x.year)}</b><span>${esc(x.text)}</span></li>`).join(''):'<li><b></b><span class="muted">Nothing listed today.</span></li>'}
     const t=$('#tfa');if(t&&j.tfa){const a=j.tfa,url=safeUrl(a.content_urls?.desktop?.page),img=safeUrl(a.originalimage?.source||a.thumbnail?.source),title=a.titles?.normalized||a.title;const it={id:'t:'+a.title,kind:'Long read',title,text:a.extract,url};
@@ -1214,20 +1268,24 @@ function rcard(it,style){REG[it.id]=it;const t=it.url?`<a href="${esc(it.url)}" 
   if(style==='music')return `<article class="rc"><div class="sleeve"><div class="disc"></div><div class="art">${im}</div></div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
   if(style==='books')return `<article class="rc"><div class="cover">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
   if(style==='games')return `<article class="rc"><div class="cart">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.75">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
-  return `<article class="rc ticket"><span class="adm">Admit one</span><h3>${t}</h3><p>${esc((it.text||'').slice(0,140))}</p><p class="small" style="opacity:.6">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+  return `<article class="rc ticket"><span class="adm">${esc(it.badge?it.badge:'Admit one')}</span><h3>${t}</h3><p>${esc((it.text||'').slice(0,140))}</p><p class="small" style="opacity:.6">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
 }
 function viewReleases(){
   const r=S.rel,bl=[];
   if(r.music)bl.push(['music','Music',S.artists.length?`New and upcoming from ${S.artists.slice(0,4).join(', ')}${S.artists.length>4?' and more':''}, plus this week's album reviews.`:'This week\'s album reviews. Add your favourite artists in Settings to follow their new releases.']);
-  if(r.books)bl.push(['books','Books',S.authors.length?`Latest from ${S.authors.slice(0,4).join(', ')}${S.authors.length>4?' and more':''}, plus new book reviews.`:'New book reviews. Add favourite authors in Settings to follow their new books.']);
+  if(r.books)bl.push(['books','Books',S.authors.length||(LIB&&LIB.books.length)?`New books from ${S.authors.length?S.authors.slice(0,3).join(', ')+' and ':''}the authors on your Book Nook shelves, plus new book reviews.`:'New book reviews. Add favourite authors in Settings to follow their new books.']);
   if(r.games)bl.push(['games','Games',S.keys.rawg?'The release calendar for the next three months'+(S.gameGenres.length?', in your genres':'')+', plus reviews.':'Game news and reviews. Add a free RAWG key in Settings for a full release calendar.']);
-  if(r.film)bl.push(['film','Film & TV','Fresh reviews of what\'s on.']);
+  if(r.film)bl.push(['film','Film & TV','Next episodes of the shows on your Front Row, films from your watchlist coming out, and fresh reviews.']);
   return `<section class="rel-hero"><div class="wrap"><h1>New <span>for you</span></h1><p>Records, books, games and films, picked from what you follow.</p></div></section>
   ${bl.length?bl.map(([id,t,d])=>`<section class="band b-${id}"><div class="wrap"><h2>${t}</h2><p class="bsub">${esc(d)}</p><div class="shelf" data-rel="${id}"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div></section>`).join(''):`<div class="wrap empty">Choose what to follow in <a href="#settings">Settings</a>.</div>`}`;
 }
 async function fillReleases(){
   const put=(id,items,msg)=>{const b=document.querySelector(`[data-rel="${id}"]`);if(b)b.innerHTML=items.length?items.map(x=>rcard(x,id)).join(''):`<p class="err">${msg||'Nothing found right now.'}</p>`};
   const from=new Date(now);from.setDate(from.getDate()-120);const fromS=ymd(from);const jobs=[];
+  const L=await Promise.race([loadLib().catch(()=>null),sleep(8000).then(()=>null)]);
+  const cnt={};(L?.books||[]).filter(b=>(b.st==='read'||b.st==='reading')&&b.a).forEach(b=>{const a=b.a.split(/,|&| and /)[0].trim();if(a)cnt[a]=(cnt[a]||0)+1});
+  const libAuthors=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+  const authors=[...new Set([...S.authors,...libAuthors])].slice(0,8);
   if(S.rel.music)jobs.push((async()=>{
     let items=[];
     for(const a of S.artists.slice(0,10)){
@@ -1243,7 +1301,7 @@ async function fillReleases(){
   })());
   if(S.rel.books)jobs.push((async()=>{
     let items=[];
-    for(const a of S.authors.slice(0,8)){
+    for(const a of authors){
       try{const j=await getJSON('https://openlibrary.org/search.json?sort=new&limit=4&fields=key,title,first_publish_year,cover_i,author_name&author='+encodeURIComponent(a),'ol:'+a+':'+TODAY,24);
         (j.docs||[]).filter(d=>d.first_publish_year>=now.getFullYear()-2).forEach(d=>items.push({id:'ol:'+d.key,kind:'Book',title:d.title,text:(d.author_name||[]).join(', '),img:d.cover_i?`https://covers.openlibrary.org/b/id/${encodeURIComponent(d.cover_i)}-M.jpg`:'',url:'https://openlibrary.org'+String(d.key).replace(/[^\w/]/g,''),src:`Open Library · ${d.first_publish_year}`,badge:d.first_publish_year>=now.getFullYear()?'new this year':''}));
       }catch(e){}
@@ -1253,7 +1311,7 @@ async function fillReleases(){
     put('books',items.slice(0,16));
   })());
   if(S.rel.games)jobs.push((async()=>{
-    let items=[];
+    let items=(L?.games||[]).filter(g=>(g.st==='wishlist'||g.st==='backlog')&&/^\d{4}-\d{2}-\d{2}/.test(g.rel)&&g.rel.slice(0,10)>=TODAY).sort((a,b)=>a.rel.localeCompare(b.rel)).map(g=>({id:'wl:'+g.id,kind:'Game',title:g.t,text:'On your wishlist',img:g.c,url:APPS.games,src:'Out '+fmtDate(g.rel.slice(0,10)+'T12:00',{day:'numeric',month:'short',year:'numeric'}),badge:soon(g.rel.slice(0,10))||'coming soon'}));
     if(S.keys.rawg){try{const to=new Date(now);to.setDate(to.getDate()+90);
       const j=await getJSON(`https://api.rawg.io/api/games?key=${encodeURIComponent(S.keys.rawg)}&dates=${TODAY},${ymd(to)}&ordering=-added&page_size=15${S.gameGenres.length?'&genres='+encodeURIComponent(S.gameGenres.join(',')):''}`,'rawg:'+S.gameGenres.join(',')+':'+TODAY,12);
       items=(j.results||[]).map(x=>({id:'rw:'+x.id,kind:'Game',title:x.name,text:[(x.genres||[]).map(g=>g.name).join(', '),(x.platforms||[]).map(p=>p.platform.name).slice(0,4).join(', ')].filter(Boolean).join(' · '),img:safeUrl(x.background_image),url:'https://rawg.io/games/'+encodeURIComponent(x.slug),src:'Out '+fmtDate(x.released+'T12:00',{day:'numeric',month:'short'}),badge:soon(x.released)}));
@@ -1261,7 +1319,16 @@ async function fillReleases(){
     try{items=items.concat(await guardian('games',{section:'games'},'video games',9))}catch(e){}
     put('games',items.slice(0,18));
   })());
-  if(S.rel.film)jobs.push((async()=>{try{put('film',await guardian('film',{section:'film',tag:'tone/reviews'},'film review',12))}catch(e){put('film',[],'Couldn\'t load film reviews right now.')}})());
+  if(S.rel.film)jobs.push((async()=>{
+    let items=[];
+    const shows=(L?.watch||[]).filter(w=>w.ty==='tv'&&w.tm&&(w.st==='watching'||w.st==='watched'||w.st==='want')).slice(0,14);
+    for(const w of shows){try{const j=await getJSON(`https://api.tvmaze.com/shows/${encodeURIComponent(w.tm)}?embed=nextepisode`,'tvm:'+w.tm+':'+TODAY,12);const ep=j?._embedded?.nextepisode;
+      if(ep&&ep.airdate)items.push({id:'tv:'+ep.id,kind:'TV',title:j.name||w.t,text:`Season ${ep.season}, episode ${ep.number}${ep.name?': '+ep.name:''}`,url:safeUrl(ep.url)||APPS.watch,src:'Airs '+fmtDate(ep.airdate+'T12:00',{weekday:'short',day:'numeric',month:'short'}),badge:soon(ep.airdate)||'',d:ep.airdate});}catch(e){}}
+    items.sort((a,b)=>a.d.localeCompare(b.d));
+    (L?.watch||[]).filter(w=>w.st==='want'&&w.ty!=='tv'&&/^\d{4}-\d{2}-\d{2}/.test(w.rel)&&w.rel.slice(0,10)>=TODAY).forEach(w=>items.push({id:'fr:'+w.id,kind:'Film',title:w.t,text:'On your watchlist',url:APPS.watch,src:'Out '+fmtDate(w.rel.slice(0,10)+'T12:00',{day:'numeric',month:'short'}),badge:soon(w.rel.slice(0,10))}));
+    try{items=items.concat(await guardian('film',{section:'film',tag:'tone/reviews'},'film review',12))}catch(e){}
+    put('film',items.slice(0,20),'Couldn\'t load film and TV news right now.');
+  })());
   await Promise.all(jobs);
 }
 
@@ -1342,8 +1409,96 @@ function bindSettings(){
   $('#s-clear').onclick=()=>{LS.keys().forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});for(const k in MEM)if(k.startsWith('c:'))delete MEM[k];toast('News will refresh')};
 }
 
+// ---------- MY LIBRARY: shared with Book Nook, Save Point and Front Row ----------
+const SBDEF={url:'https://adkfuzmontecmhfnrcyb.supabase.co',key:'sb_publishable_sDtY-M37SKKBOqUe0mlZUA_jOrOW4E9'};
+const APPS={books:'../reading-ledger/',games:'../save-point/',watch:'../front-row-/'};
+const rawGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+let sbClient=null,LIB=null,libP=null;
+const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)});
+async function sb(){
+  if(sbClient)return sbClient;
+  if(!window.supabase?.createClient)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js');
+  const sh=rawGet('reading-ledger-sync',null),cfg=sh?.url&&sh?.key?sh:SBDEF;
+  sbClient=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'reading-ledger-auth'}});
+  return sbClient;
+}
+const okImg=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+const alive=(list,del)=>(Array.isArray(list)?list:[]).filter(x=>x&&x.id!=null&&!(del&&del[x.id]&&del[x.id]>=(x.updatedAt||0)));
+const tmId=v=>v&&typeof v==='object'?v.id:v;
+const nb=b=>({id:'b'+b.id,t:b.title||'Untitled',a:b.author||'',st:b.shelf||'',p:+b.pages||0,cp:+b.currentPage||0,f:String(b.finished||''),r:+b.rating||0,c:okImg(b.cover)});
+const ng=g=>({id:'g'+g.id,t:g.title||'Untitled',st:g.status||'',h:+g.hours||0,f:String(g.finished||''),r:+g.rating||0,c:okImg(g.cover)||okImg(g.coverPick)||(g.steamAppId?`https://cdn.cloudflare.steamstatic.com/steam/apps/${encodeURIComponent(g.steamAppId)}/library_600x900_2x.jpg`:''),rel:typeof g.release==='string'?g.release:''});
+const nw=w=>({id:'w'+w.id,t:w.title||'Untitled',ty:w.type||'movie',st:w.status||'',s:+w.season||0,e:+w.episode||0,f:String(w.finished||''),r:+w.rating||0,c:okImg(w.poster),y:w.year||'',tm:tmId(w.tvmaze),ns:typeof w.nextSeason==='string'?w.nextSeason:'',rel:typeof w.release==='string'?w.release:''});
+async function loadLib(force){
+  if(LIB&&!force)return LIB;
+  if(libP&&!force)return libP;
+  libP=(async()=>{
+    const out={books:[],games:[],watch:[],signedIn:false,email:'',src:'',err:''};
+    try{const c=await sb();const{data}=await c.auth.getSession();const u=data.session?.user;
+      if(u){out.signedIn=true;out.email=u.email||'';out.src='account';
+        const q=t=>c.from(t).select('data').eq('user_id',u.id).maybeSingle().then(r=>r.data?.data||null,()=>null);
+        const[b,g,w]=await Promise.all([q('library'),q('game_library'),q('watch_library')]);
+        if(b)out.books=alive(b.books,b.deleted).map(nb);if(g)out.games=alive(g.games,g.deleted).map(ng);if(w)out.watch=alive(w.items,w.deleted).map(nw);
+      }}catch(e){out.err='offline'}
+    if(!out.books.length){const v=rawGet('reading-ledger-standalone',null);out.books=alive(Array.isArray(v)?v:v?.books).map(nb)}
+    if(!out.games.length){const v=rawGet('save-point-games',null);out.games=alive(Array.isArray(v)?v:v?.games,rawGet('save-point-deleted',null)).map(ng)}
+    if(!out.watch.length){const v=rawGet('front-row-library',null);out.watch=alive(Array.isArray(v)?v:v?.items,v?.deleted).map(nw)}
+    const any=out.books.length||out.games.length||out.watch.length;
+    if(any){if(!out.src)out.src='device';LS.set('mylib',{books:out.books,games:out.games,watch:out.watch,at:Date.now()})}
+    else{const c=LS.get('mylib',null);if(c){Object.assign(out,{books:c.books||[],games:c.games||[],watch:c.watch||[]});out.src='saved'}}
+    LIB=out;return out;
+  })();
+  return libP;
+}
+const cvr=(c,t)=>c?`<img src="${esc(c)}" alt="" loading="lazy" data-fb="${esc(t.slice(0,30))}" data-bg="${esc(genBg(t))}">`:`<div class="gen" style="background:${genBg(t)}">${esc(t.slice(0,30))}</div>`;
+const nowOf=L=>{const o=[];
+  L.books.filter(b=>b.st==='reading').slice(0,3).forEach(b=>o.push({k:'Reading',app:'books',t:b.t,c:b.c,d:b.p?`Page ${b.cp||0} of ${b.p}`:(b.a||''),pct:b.p?Math.min(100,Math.round(b.cp/b.p*100)):null,sub:b.a}));
+  L.games.filter(g=>g.st==='playing').slice(0,3).forEach(g=>o.push({k:'Playing',app:'games',t:g.t,c:g.c,d:g.h?`${Math.round(g.h)} h played`:'In progress',pct:null}));
+  L.watch.filter(w=>w.st==='watching').slice(0,3).forEach(w=>o.push({k:'Watching',app:'watch',t:w.t,c:w.c,d:w.ty==='tv'&&w.s?`Season ${w.s}${w.e?', episode '+w.e:''}`:(w.y?String(w.y):'In progress'),pct:null}));
+  return o};
+function viewShelf(){return `<div class="wrap den" id="den"><h1>Your shelf</h1><p class="src">Opening your library…</p><div class="skel" style="height:200px"></div></div>`}
+async function fillShelf(){
+  const L=await loadLib(),el=$('#den');if(!el)return;
+  const yr=String(now.getFullYear()),inYr=x=>x.f.startsWith(yr);
+  const bF=L.books.filter(b=>b.st==='read'&&inYr(b)),gF=L.games.filter(g=>g.st==='finished'&&inYr(g)),wF=L.watch.filter(w=>w.st==='watched'&&inYr(w));
+  const any=L.books.length||L.games.length||L.watch.length;
+  const src=L.src==='account'?`Synced from your account (${esc(L.email)})`:L.src==='device'?'From the apps on this device. Sign in to see everything':L.src==='saved'?'Showing your last saved copy':'Nothing found yet';
+  const now_=nowOf(L);
+  const row=(title,app,items)=>items.length?`<div class="shelfrow"><h3>${title}<a href="${APPS[app]}">Open</a></h3><div class="ledge">${items.slice(0,24).map(x=>`<a class="spine" href="${APPS[app]}"><div class="cv">${cvr(x.c,x.t)}</div><p>${esc(x.t)}</p></a>`).join('')}</div><div class="wood"></div></div>`:'';
+  const recent=[...L.books.filter(b=>b.st==='read'&&b.f).map(b=>({k:'Book',t:b.t,f:b.f,r:b.r})),...L.games.filter(g=>g.st==='finished'&&g.f).map(g=>({k:'Game',t:g.t,f:g.f,r:g.r})),...L.watch.filter(w=>w.st==='watched'&&w.f).map(w=>({k:w.ty==='tv'?'Show':'Film',t:w.t,f:w.f,r:w.r}))].sort((a,b)=>b.f.localeCompare(a.f)).slice(0,12);
+  const fd=f=>/^\d{4}-\d{2}-\d{2}/.test(f)?fmtDate(f.slice(0,10)+'T12:00',{day:'numeric',month:'short',year:'numeric'}):f.slice(0,4);
+  const stars=r=>r?'★'.repeat(Math.floor(r))+(r%1?'½':''):'';
+  el.innerHTML=`<h1>Your shelf</h1><p class="src"><span>${src}</span><button type="button" id="den-r">Refresh</button>${L.signedIn?'<button type="button" id="den-out">Sign out</button>':''}</p>
+  ${!L.signedIn?`<form class="signin" id="den-in"><b style="font:600 20px var(--lit)">Sign in with your Book Nook account</b><span class="small muted">The same email and password as Book Nook, Save Point and Front Row. Once you're signed in to one of them on this device, you're signed in here too.</span><input type="email" id="den-e" placeholder="Email" autocomplete="username" required><input type="password" id="den-p" placeholder="Password" autocomplete="current-password" required><div class="row"><button class="btn acc" type="submit">Sign in</button><span class="small" id="den-m"></span></div></form>`:''}
+  ${any?`${now_.length?`<h2>Right now</h2><div class="nowg">${now_.map(n=>`<a class="nowc" href="${APPS[n.app]}"><div class="cv">${cvr(n.c,n.t)}</div><div><small>${n.k}</small><h3>${esc(n.t)}</h3><p>${esc(n.d)}</p>${n.pct!=null?`<div class="prog"><i style="width:${n.pct}%"></i></div>`:''}</div></a>`).join('')}</div>`:''}
+  <h2>Your ${yr} so far</h2><div class="stats">
+    <div class="stat"><b>${bF.length}</b><span>books finished</span></div>
+    <div class="stat"><b>${bF.reduce((s,b)=>s+b.p,0).toLocaleString()}</b><span>pages read</span></div>
+    <div class="stat"><b>${gF.length}</b><span>games finished</span></div>
+    <div class="stat"><b>${Math.round(L.games.reduce((s,g)=>s+g.h,0)).toLocaleString()}</b><span>hours played, all time</span></div>
+    <div class="stat"><b>${wF.filter(w=>w.ty!=='tv').length}</b><span>films watched</span></div>
+    <div class="stat"><b>${wF.filter(w=>w.ty==='tv').length}</b><span>shows finished</span></div></div>
+  <h2>Up next</h2>
+  ${row('Want to read','books',L.books.filter(b=>b.st==='want'))}
+  ${row('Wishlist and backlog','games',L.games.filter(g=>g.st==='wishlist'||g.st==='backlog'))}
+  ${row('Watchlist','watch',L.watch.filter(w=>w.st==='want'))}
+  ${recent.length?`<h2>Recently finished</h2><ul class="recent">${recent.map(r=>`<li><span class="k">${r.k}</span><span><b>${esc(r.t)}</b>${r.r?` <span class="muted small">${stars(r.r)}</span>`:''}</span><span class="d">${esc(fd(r.f))}</span></li>`).join('')}</ul>`:''}`
+  :`<p class="muted" style="margin-top:18px">${L.signedIn?'Your account has no books, games or shows yet.':'Sign in above, or open this app on the same device where you use Book Nook, Save Point and Front Row.'}</p>`}
+  <div class="apps"><a href="${APPS.books}">Book Nook</a><a href="${APPS.games}">Save Point</a><a href="${APPS.watch}">Front Row</a></div>`;
+  $('#den-r').onclick=async()=>{LIB=null;libP=null;$('#den').innerHTML=viewShelf().replace(/^<div[^>]*>|<\/div>$/g,'');await loadLib(true);fillShelf()};
+  const out=$('#den-out');if(out)out.onclick=async()=>{try{await (await sb()).auth.signOut()}catch(e){}LIB=null;libP=null;fillShelf()};
+  const f=$('#den-in');if(f)f.onsubmit=async e=>{e.preventDefault();const m=$('#den-m');m.textContent='Signing in…';
+    try{const c=await sb();const{error}=await c.auth.signInWithPassword({email:$('#den-e').value.trim(),password:$('#den-p').value});if(error)throw error;LIB=null;libP=null;fillShelf()}
+    catch(err){m.textContent=/invalid/i.test(err?.message||'')?'That email and password don\'t match.':'Couldn\'t sign in right now. Check your connection.'}};
+}
+async function fillNowStrip(){
+  const el=$('#nowstrip');if(!el)return;
+  try{const L=await loadLib();const n=nowOf(L).slice(0,4);if(!n.length){el.remove();return}
+    el.innerHTML=n.map(x=>`<a href="${APPS[x.app]}"><div class="cv">${cvr(x.c,x.t)}</div><div><small>${x.k}</small><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div></a>`).join('');
+  }catch(e){el.remove()}
+}
+
 // ---------- router ----------
-const VIEWS={today:[viewToday,fillToday,'#2a1838'],news:[viewNews,fillNews,'#121212'],sky:[viewSky,null,'#0c0a22'],releases:[viewReleases,fillReleases,'#111111'],saved:[viewSaved,null,'#5a3d22'],settings:[viewSettings,bindSettings,'#2a1838']};
+const VIEWS={today:[viewToday,fillToday,'#2a1838'],news:[viewNews,fillNews,'#121212'],sky:[viewSky,null,'#0c0a22'],shelf:[viewShelf,fillShelf,'#1a110a'],releases:[viewReleases,fillReleases,'#111111'],saved:[viewSaved,null,'#5a3d22'],settings:[viewSettings,bindSettings,'#2a1838']};
 let lastView='';
 function render(){
   const v=(location.hash||'#today').slice(1),key=VIEWS[v]?v:'today';
