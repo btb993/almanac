@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1838">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Daily Almanac</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;700&family=Cinzel:wght@500;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400;1,7..72,600&family=Manrope:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Press+Start+2P&family=Special+Elite&display=swap">
+<style>
+/* VOICE everyday and calm; each room of the almanac has its own character
+   IDEA a printed almanac bound from five different papers: curiosity cabinet, broadsheet, star atlas, record-shop posters, corkboard
+   PICTURE Today: the real moon over a night band; News: a masthead and lead story; Sky: your birth wheel in gold; Releases: sleeves, covers and tickets
+   COLOUR plum night and coral (today), newsprint and red (news), ink-blue and gold (sky), pink, mustard, blue and red bands (releases), cork (saved)
+   TYPE Literata + Manrope base; Playfair for news, Cinzel for sky, Anton for posters, Caveat for handwriting, Special Elite for archives
+   LAYOUT slim bar with tabs (bottom bar on phones), each view owns its full-bleed hero; two columns over 900px, one column on phones */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#141017);--card:light-dark(#f5f2f7,#1f1924);--ink:light-dark(#1d1622,#efe9f2);--mute:light-dark(#6a6072,#a99fb1);--line:light-dark(#e2dae8,#352c3c);--acc:#ff6b5a;--acc-ink:light-dark(#c63a2b,#ff8a7c);--barbg:#2a1838;--barink:#f6f0fa;--moon:#f4efe6;--lit:"Literata",Georgia,serif;--ui:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--ui);overflow-x:clip;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));transition:background .3s}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+img{max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.full{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* bar */
+header.bar{position:sticky;top:0;z-index:30;background:var(--barbg);color:var(--barink);padding-top:env(safe-area-inset-top,0px)}
+.barin{display:flex;align-items:center;gap:12px;min-height:56px}
+.brand{font:600 22px/1 var(--lit);text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+.bdate{font-size:13px;opacity:.75;white-space:nowrap}
+.gear{margin-left:auto;width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:inherit;cursor:pointer;display:grid;place-items:center}
+.gear:hover{background:color-mix(in srgb,currentColor 14%,transparent)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;min-height:56px;text-decoration:none;font-size:12px;font-weight:700;color:var(--mute)}
+nav.tabs a svg{width:22px;height:22px}
+nav.tabs a[aria-current=page]{color:var(--acc-ink)}
+@media(min-width:760px){body{padding-bottom:0}nav.tabs{position:static;background:transparent;border:0;padding:0;margin-left:16px;gap:2px}nav.tabs a{flex:none;flex-direction:row;gap:7px;font-size:15px;padding:0 14px;min-height:56px;color:inherit;opacity:.7;border-bottom:3px solid transparent}nav.tabs a[aria-current=page]{opacity:1;color:inherit;border-bottom-color:var(--acc)}nav.tabs a:hover{opacity:1}nav.tabs a svg{width:18px;height:18px}}
+@media(max-width:759px){.bdate{display:none}}
+
+/* shared bits */
+.label{font-size:13px;font-weight:800;margin:0 0 8px;color:var(--acc-ink)}
+.tools{position:absolute;top:10px;right:8px;display:flex;gap:2px;z-index:2}
+.ib{width:40px;height:40px;border-radius:10px;border:0;background:transparent;color:inherit;opacity:.65;cursor:pointer;display:grid;place-items:center}
+.ib:hover{opacity:1;background:color-mix(in srgb,currentColor 10%,transparent)}
+.ib.on{opacity:1;color:var(--acc)}
+.ib svg{width:20px;height:20px}
+.muted{color:var(--mute)}
+.small{font-size:14px}
+.err{font-size:14px;opacity:.75;padding:10px 0}
+.skel{height:150px;border-radius:14px;background:linear-gradient(90deg,color-mix(in srgb,currentColor 6%,transparent),color-mix(in srgb,currentColor 12%,transparent),color-mix(in srgb,currentColor 6%,transparent));background-size:200% 100%;animation:sh 1.4s infinite linear}
+@keyframes sh{to{background-position:-200% 0}}
+.btn{border:0;border-radius:12px;padding:11px 18px;min-height:44px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--bg);text-decoration:none;display:inline-flex;align-items:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.acc{background:var(--acc);color:#1d0f0c}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.empty{text-align:center;padding:48px 16px}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1d1622;color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:13px;opacity:.7}
+.scroll{overflow-x:auto}
+
+/* ============ TODAY: cabinet of curiosities ============ */
+.hero-t{background:radial-gradient(120% 140% at 85% 0%,#5a3473 0%,#2a1838 55%,#1a0f24 100%);color:#f6f0fa;position:relative;overflow:hidden}
+.hero-t .stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ht{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding-block:clamp(26px,5vw,56px)}
+.ht .kick{margin:0 0 6px;color:#d9cce3;font-size:15px}
+.ht h1{font:600 clamp(32px,5.4vw,56px)/1.04 var(--lit);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+.oneline{font:italic 400 clamp(17px,2vw,20px)/1.45 var(--lit);color:#f3e7f8;margin:0 0 16px;max-width:46ch}
+.oneline b{font-style:normal;color:#ffb3a8;font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta span{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 12px;font-size:14px;white-space:nowrap}
+.bigmoon{margin:0;text-align:center;width:clamp(110px,20vw,210px)}
+.bigmoon svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 30px rgba(244,239,230,.3))}
+.bigmoon figcaption{font-size:14px;color:#e5d8ee;margin-top:10px}
+.bigmoon figcaption b{display:block;font:600 17px/1.2 var(--lit);color:#fff}
+.tgrid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);padding-block:22px}
+.col{display:grid;gap:18px;align-content:start}
+@media(min-width:900px){.tgrid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.pane{position:relative;border-radius:18px;padding:22px 24px}
+.c-fact{background:var(--acc);color:#2a0d08}
+.c-fact .label{color:#2a0d08;opacity:.8}
+.c-fact .q{font:600 clamp(21px,2.4vw,26px)/1.35 var(--lit);margin:0;padding-right:72px;text-wrap:pretty}
+.c-fact .q::before{content:"\201C";display:block;font:900 72px/.6 "Playfair Display",Georgia,serif;opacity:.35;margin-bottom:6px}
+.c-poem{background:light-dark(#fffcf6,#1d1820);border:1px solid light-dark(#e9e0cf,#3a3040);padding:30px clamp(22px,4vw,44px) 34px;box-shadow:0 1px 0 light-dark(#e9e0cf,#3a3040),0 6px 0 -3px light-dark(#fffcf6,#1d1820),0 7px 0 -3px light-dark(#e9e0cf,#3a3040)}
+.c-poem .label{text-align:center}
+.c-poem h3{font:italic 600 clamp(24px,3vw,30px)/1.15 var(--lit);text-align:center;margin:4px 0 4px;text-wrap:balance}
+.c-poem .by{text-align:center;color:var(--mute);margin:0 0 20px;font-size:15px}
+.c-poem .orn{text-align:center;color:var(--acc-ink);margin:-8px 0 18px;font-size:18px}
+.c-poem .verse{font:400 17.5px/1.75 var(--lit);white-space:pre-wrap;max-width:34em;margin:0 auto}
+.c-poem .verse::first-letter{float:left;font:600 3.4em/.8 "Playfair Display",Georgia,serif;margin:.08em .1em 0 0;color:var(--acc-ink)}
+.c-hist{background:light-dark(#efe3c9,#2a2318);color:light-dark(#2d2416,#ede0c6);overflow:hidden}
+.c-hist .label{color:light-dark(#8a2a1a,#ff9b85)}
+.c-hist h3{font:400 24px/1.2 "Special Elite","Courier New",monospace;margin:0 0 4px;padding-right:130px}
+.c-hist .where{font-size:14px;opacity:.75;margin:0 0 14px;padding-right:120px}
+.c-hist p.body{font:400 15.5px/1.65 "Special Elite","Courier New",monospace;margin:0}
+.stamp{position:absolute;top:44px;right:22px;transform:rotate(-9deg);border:3px solid #b3261e;color:#b3261e;border-radius:8px;padding:4px 10px;font:400 26px/1 "Special Elite",monospace;opacity:.85;mix-blend-mode:multiply}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .stamp{mix-blend-mode:normal;color:#ff8a7c;border-color:#ff8a7c}}
+:root[data-theme=dark] .stamp{mix-blend-mode:normal;color:#ff8a7c;border-color:#ff8a7c}
+.c-word{background:var(--bg);border-top:4px double var(--ink);border-bottom:1px solid var(--ink);border-radius:0;padding:18px 4px 20px}
+.c-word .hw{font:italic 700 clamp(36px,5vw,48px)/1 "Playfair Display",Georgia,serif;margin:0}
+.c-word .pos{font:italic 400 16px var(--lit);color:var(--mute);margin:6px 0 12px}
+.c-word .def{font:400 18px/1.5 var(--lit);margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}
+.c-word .def b{color:var(--acc-ink)}
+.c-otd{background:var(--card)}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:3.2em;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl li{display:grid;grid-template-columns:3.2em minmax(0,1fr);gap:18px;padding:7px 0;position:relative}
+.tl li::after{content:"";position:absolute;left:calc(3.2em - 4px);top:15px;width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.tl b{font:600 17px/1.4 var(--lit);text-align:right;font-variant-numeric:tabular-nums}
+.c-q{background:light-dark(#fffef7,#1b1a14);background-image:repeating-linear-gradient(transparent 0 35px,light-dark(#cfe0f0,#2c3440) 35px 36px);border-left:0;padding-top:20px}
+.c-q .hand{font:500 clamp(26px,3vw,32px)/36px "Caveat",cursive;margin:0;padding-right:40px;color:light-dark(#22325c,#cddcff)}
+.streak{display:flex;gap:5px;margin-top:16px;flex-wrap:wrap}
+.streak i{width:20px;height:20px;border-radius:50%;border:2px solid light-dark(#22325c,#cddcff);opacity:.35}
+.streak i.on{background:var(--acc);border-color:var(--acc);opacity:1}
+.tgrid2{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);padding-bottom:22px}
+@media(min-width:900px){.tgrid2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.c-art{background:#2b2622;color:#efe8df;text-align:center;padding:26px 22px}
+.c-art .label{color:#e7c98f;text-align:left}
+.frame{display:inline-block;padding:12px;background:linear-gradient(135deg,#c9a45c,#8a6a2c 45%,#d8b86e 60%,#7a5c22);box-shadow:0 18px 30px -12px rgba(0,0,0,.6);margin:6px 0 18px;max-width:100%}
+.frame .mat{background:#f4efe4;padding:clamp(10px,2vw,18px)}
+.frame img{display:block;max-height:360px;width:auto;max-width:100%;margin:0 auto}
+.plaque{background:#f4efe4;color:#2b2622;display:inline-block;text-align:left;padding:10px 14px;border-radius:2px;max-width:420px;font-size:14px}
+.plaque b{font:italic 600 16px/1.3 var(--lit);display:block}
+.c-apod{background:#05060d;color:#e8ecff;overflow:hidden;padding:0}
+.c-apod .in{padding:18px 22px 22px}
+.c-apod img{width:100%;display:block;max-height:420px;object-fit:cover}
+.c-apod .label{color:#9fb4ff}
+.c-apod h3{font:600 22px/1.2 var(--lit);margin:0 0 8px;padding-right:44px}
+.c-read{background:var(--card);display:grid;gap:20px;grid-template-columns:minmax(0,1fr);margin-bottom:28px;align-items:center}
+@media(min-width:760px){.c-read.has{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}}
+.c-read img{width:100%;border-radius:12px;display:block;max-height:340px;object-fit:cover}
+.c-read h3{font:600 clamp(24px,3vw,32px)/1.12 var(--lit);margin:0 0 10px;padding-right:44px}
+.c-read p{margin:0 0 12px;font:400 17px/1.6 var(--lit)}
+@media(max-width:600px){.ht{grid-template-columns:minmax(0,1fr)}.bigmoon{grid-row:1;justify-self:start;display:flex;align-items:center;gap:14px;width:auto;text-align:left}.bigmoon svg{width:76px}.bigmoon figcaption{margin:0}.stamp{top:auto;bottom:16px;font-size:20px}.c-hist h3,.c-hist .where{padding-right:80px}.c-hist p.body{padding-bottom:28px}}
+
+/* ============ NEWS: broadsheet ============ */
+body[data-v=news]{--bg:light-dark(#f4f0e8,#161513);--card:light-dark(#ebe5da,#22201c);--ink:light-dark(#121212,#ece7dd);--mute:light-dark(#5b564d,#a9a294);--line:light-dark(#12121233,#ece7dd30);--acc:#c4161c;--acc-ink:light-dark(#b0141a,#ff6b6b);--barbg:light-dark(#121212,#0b0b0a);--barink:#f4f0e8}
+.mast-n{text-align:center;padding:26px 0 0}
+.ear{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mute);border-bottom:1px solid var(--ink);padding-bottom:8px;flex-wrap:wrap}
+.mast-n h1{font:900 clamp(40px,8vw,92px)/1 "Playfair Display",Georgia,serif;letter-spacing:-.02em;margin:14px 0 10px}
+.dl{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);padding:8px 0;font:italic 400 15px var(--lit);display:flex;justify-content:center;gap:6px 18px;flex-wrap:wrap}
+.secnav{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:12px 0 4px}
+.secnav button{border:0;background:transparent;padding:8px 12px;min-height:40px;cursor:pointer;font:700 14px var(--ui);border-bottom:2px solid transparent}
+.secnav button[aria-pressed=true]{border-bottom-color:var(--acc);color:var(--acc-ink)}
+.nsearch{display:flex;justify-content:center;padding:6px 0 10px}
+.nsearch input{max-width:420px;width:100%;font-size:16px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg);min-height:44px}
+.nsec{border-top:4px solid var(--ink);margin-top:26px;padding-top:6px}
+.nsec>h2{font:900 26px/1.2 "Playfair Display",Georgia,serif;margin:0 0 14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.nsec>h2 small{font:400 13px var(--ui);color:var(--mute)}
+.paper{display:grid;gap:0 26px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:760px){.paper{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1040px){.paper{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.story{position:relative;padding:12px 0 14px;border-bottom:1px solid var(--line)}
+.story h3{font:700 19px/1.25 "Playfair Display",Georgia,serif;margin:0 0 6px;padding-right:36px}
+.story h3 a{text-decoration:none}
+.story h3 a:hover{text-decoration:underline}
+.story p{margin:0 0 6px;font:400 15px/1.5 var(--lit);color:var(--mute)}
+.story .by{font-size:12.5px;color:var(--mute);font-weight:700}
+.story img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;margin-bottom:10px;filter:saturate(.85)}
+.story .ib{position:absolute;top:6px;right:-6px}
+.story.lead{grid-column:1/-1;display:grid;gap:18px;grid-template-columns:minmax(0,1fr);border-bottom:2px solid var(--ink)}
+@media(min-width:760px){.story.lead.has{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
+.story.lead h3{font:900 clamp(26px,3.4vw,38px)/1.08 "Playfair Display",Georgia,serif}
+.story.lead p{font-size:17px;color:var(--ink)}
+.story.lead img{margin:0}
+
+/* ============ SKY: star atlas ============ */
+body[data-v=sky]{color-scheme:dark;--bg:#0c0a22;--card:#16123a;--ink:#ece7ff;--mute:#aaa2d6;--line:#ffffff1f;--acc:#e8c873;--acc-ink:#f0d48a;--barbg:#0c0a22;--barink:#ece7ff;background:radial-gradient(ellipse at 70% -10%,#2a1f63 0%,#0c0a22 55%) fixed,#0c0a22}
+body[data-v=sky] .skystars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.skyv{position:relative;z-index:1;padding-block:26px 40px}
+.skyv h1{font:700 clamp(32px,5vw,54px)/1.05 "Cinzel",Georgia,serif;margin:0 0 6px;color:#f3e2ad}
+.skyv h2{font:500 clamp(22px,2.6vw,28px)/1.2 "Cinzel",Georgia,serif;margin:0 0 14px;color:#f3e2ad}
+.skyv .sub{color:var(--mute);margin:0 0 22px}
+.skyhero{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);align-items:center}
+@media(min-width:900px){.skyhero{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
+.wheel svg{width:100%;max-width:580px;height:auto;display:block;margin:0 auto}
+.big3{display:grid;gap:12px}
+.big3 div{border:1px solid #e8c87355;border-radius:16px;padding:14px 18px;background:#ffffff08}
+.big3 small{color:var(--mute);font-size:13px;display:block}
+.big3 b{font:700 26px/1.15 "Cinzel",Georgia,serif;color:#f3e2ad;display:flex;align-items:center;gap:10px}
+.big3 b span{font-size:30px;font-family:"Segoe UI Symbol","Noto Sans Symbols","Apple Symbols",sans-serif}
+.big3 p{margin:4px 0 0;font:italic 400 16px/1.45 var(--lit)}
+.glass{background:#ffffff0a;border:1px solid #ffffff1a;border-radius:20px;padding:20px 22px}
+.skygrid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr);margin-top:28px}
+@media(min-width:900px){.skygrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.asp{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.asp h4{margin:0 0 3px;font-size:16px}
+.asp p{margin:0;color:var(--mute);font-size:15px}
+.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+.t-hard{background:#ff6b5a33;color:#ffa79c}
+.t-soft{background:#7fa8ff33;color:#b5ccff}
+.t-conj{background:#e8c87333;color:#f3e2ad}
+.reading{list-style:none;margin:0;padding:0;display:grid;gap:0;grid-template-columns:minmax(0,1fr)}
+@media(min-width:760px){.reading{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}}
+.reading li{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.reading .gl{font:28px/1 "Segoe UI Symbol","Noto Sans Symbols","Apple Symbols",sans-serif;color:#f3e2ad;text-align:center}
+.reading h4{margin:0 0 2px;font:700 15px var(--ui)}
+.reading p{margin:0;font-size:15px;color:var(--mute)}
+.route{list-style:none;margin:0;padding:0;position:relative}
+.route::before{content:"";position:absolute;left:27px;top:10px;bottom:10px;width:1px;background:linear-gradient(#e8c873,#e8c87322)}
+.route li{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;padding:10px 0;position:relative}
+.route .disc{width:56px;height:56px;border-radius:50%;border:1px solid #e8c873;background:#0c0a22;display:grid;place-items:center;text-align:center;line-height:1}
+.route .disc b{font:700 20px "Cinzel",serif;color:#f3e2ad}
+.route .disc small{font-size:11px;color:var(--mute);display:block;margin-top:2px}
+.route h4{margin:6px 0 3px;font-size:16px}
+.route p{margin:0;color:var(--mute);font-size:15px}
+.route .mo{font:500 15px "Cinzel",serif;color:#f3e2ad;padding:16px 0 4px 70px;display:block}
+.skyv td,.skyv th{border-color:var(--line)}
+.callout{border:1px solid #e8c873;border-radius:18px;padding:18px 20px;background:#e8c8730f}
+@media(max-width:600px){.big3 b{font-size:22px}}
+
+/* ============ RELEASES: record-shop posters ============ */
+body[data-v=releases]{--barbg:light-dark(#111,#000);--barink:#fff}
+.rel-hero{background:#111;color:#fff;padding-block:clamp(26px,5vw,52px)}
+.rel-hero h1{font:400 clamp(44px,8vw,96px)/.92 "Anton",Impact,sans-serif;margin:0;text-transform:uppercase}
+.rel-hero h1 span{color:#ff3d7f}
+.rel-hero p{margin:12px 0 0;color:#cfcfcf;max-width:60ch}
+.band{padding-block:clamp(26px,4vw,48px)}
+.band h2{font:400 clamp(38px,6vw,64px)/.95 "Anton",Impact,sans-serif;text-transform:uppercase;margin:0}
+.band .bsub{margin:8px 0 22px;max-width:62ch;font-weight:500}
+.shelf{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.b-music{background:#ff3d7f;color:#1a0010}
+.b-books{background:#f2b705;color:#241a00}
+.b-games{background:#2d4bff;color:#fff}
+.b-games h2{font:400 clamp(22px,4vw,36px)/1.3 "Press Start 2P",monospace}
+.b-film{background:#151515;color:#fff}
+.b-film h2{color:#ff4d4d}
+.rc{position:relative;display:flex;flex-direction:column;gap:6px}
+.rc h3{font:800 16px/1.25 var(--ui);margin:0;padding-right:34px}
+.rc h3 a{text-decoration:none}
+.rc h3 a:hover{text-decoration:underline}
+.rc p{margin:0;font-size:14px;opacity:.85}
+.rc .ib{position:absolute;right:-4px;bottom:-4px;opacity:.8}
+.badge{display:inline-block;font-size:12px;font-weight:800;border-radius:999px;padding:2px 9px;background:#111;color:#fff;align-self:flex-start}
+.sleeve{position:relative;aspect-ratio:1;margin-right:16%;margin-bottom:6px}
+.sleeve .disc{position:absolute;top:4%;right:-18%;width:92%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ff3d7f 0 14%,#111 15% 17%,#1b1b1b 18% 100%);box-shadow:inset 0 0 0 2px #000;transition:right .3s}
+.sleeve .disc::after{content:"";position:absolute;inset:8%;border-radius:50%;background:repeating-radial-gradient(circle,#ffffff0d 0 1px,transparent 1px 4px)}
+.rc:hover .disc{right:-26%}
+@media(prefers-reduced-motion:reduce){.sleeve .disc{transition:none}}
+.sleeve .art{position:absolute;inset:0;box-shadow:0 10px 20px -8px #0008}
+.art img,.cover img,.cart img{width:100%;height:100%;object-fit:cover;display:block}
+.gen{width:100%;height:100%;display:grid;place-items:end start;padding:12px;font:400 20px/1.05 "Anton",Impact,sans-serif;text-transform:uppercase;color:#fff;overflow:hidden}
+.cover{aspect-ratio:2/3;position:relative;box-shadow:0 14px 24px -10px #0009;border-radius:2px 6px 6px 2px;overflow:hidden;margin-bottom:6px;max-width:170px}
+.cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:linear-gradient(90deg,#0005,#fff3,#0002);z-index:1}
+.b-books .shelf{grid-template-columns:repeat(auto-fill,minmax(min(100%,160px),1fr))}
+.cart{aspect-ratio:16/9;border:4px solid #fff;box-shadow:6px 6px 0 #0b1a7a;margin-bottom:8px;overflow:hidden;background:#0b1a7a}
+.ticket{background:#f6efe2;color:#1a1a1a;border-radius:8px;padding:16px 16px 14px 22px;position:relative;-webkit-mask:radial-gradient(circle 8px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 8px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;mask:radial-gradient(circle 8px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 8px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.ticket::before{content:"";position:absolute;left:12px;top:10px;bottom:10px;border-left:2px dashed #c9bda8}
+.ticket .adm{font:400 13px "Anton",sans-serif;color:#c4161c;text-transform:uppercase}
+
+/* ============ SAVED: corkboard ============ */
+body[data-v=saved]{--bg:#b98b5b;--barbg:#5a3d22;--barink:#fff;background:#b98b5b;background-image:radial-gradient(#0000001a 1px,transparent 1.5px),radial-gradient(#ffffff14 1px,transparent 1.5px);background-size:7px 7px,11px 11px}
+.corkh{padding-block:28px 10px;color:#2a1a0c}
+.corkh h1{font:700 clamp(40px,6vw,60px)/1 "Caveat",cursive;margin:0}
+.board{display:grid;gap:26px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));padding-block:18px 40px;align-items:start}
+.note{background:#fffdf3;color:#2a2116;padding:26px 20px 18px;box-shadow:0 10px 18px -8px #0007;position:relative}
+.note:nth-child(3n){background:#fff3a6}.note:nth-child(4n){background:#e6f3ff}.note:nth-child(5n){background:#ffe1e6}
+.note::before{content:"";position:absolute;top:-8px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a7c,#b3261e);box-shadow:0 3px 4px #0005}
+.note h3{font:700 26px/1.05 "Caveat",cursive;margin:0 0 6px;padding-right:30px}
+.note h3 a{text-decoration:none}
+.note p{margin:0 0 8px;font-size:15px}
+.note .verse{font:400 15px/1.6 var(--lit);white-space:pre-wrap}
+.note .k{font-size:12px;font-weight:800;opacity:.6}
+.note .ib{position:absolute;top:6px;right:4px}
+.note img{width:100%;max-height:160px;object-fit:cover;display:block;margin-bottom:10px}
+
+/* ============ SETTINGS ============ */
+.setv{padding-block:26px 40px}
+.setv h1{font:600 clamp(30px,4vw,40px)/1.1 var(--lit);margin:0 0 6px}
+form.set{display:grid;gap:16px;max-width:760px}
+fieldset{border:0;background:var(--card);border-radius:18px;padding:18px 20px;margin:0;display:grid;gap:14px}
+legend{font:600 20px/1.2 var(--lit);padding:0;float:left;width:100%;margin-bottom:4px}
+label.f{display:grid;gap:6px;font-weight:700;font-size:14px}
+label.f span.h{font-weight:400;color:var(--mute);font-size:13px}
+input[type=text],input[type=date],input[type=time],input[type=password],input[type=number],select,textarea{font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);min-height:46px;width:100%}
+textarea{min-height:90px;resize:vertical}
+.two{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:560px){.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.checks label{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:42px;cursor:pointer;background:var(--bg);font-size:14px;font-weight:600}
+.checks input{width:18px;height:18px;accent-color:var(--acc)}
+.places{display:grid;gap:6px}
+.places button{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:44px}
+.places button:hover{border-color:var(--acc)}
+.savebar{position:sticky;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:5;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+@media(min-width:760px){.savebar{bottom:12px}}
+.warn{background:#ff6b5a22;border:1px solid #ff6b5a;border-radius:14px;padding:14px 16px;font-size:15px}
+.ok{color:light-dark(#1d7a3a,#7fdc9a);font-weight:700;font-size:14px}
+@media(prefers-reduced-motion:reduce){.skel{animation:none}body{transition:none}}
+</style>
+</head>
+<body data-v="today">
+<svg class="skystars" id="skystars" aria-hidden="true" style="display:none"></svg>
+<header class="bar"><div class="wrap barin">
+  <a class="brand" href="#today">Almanac</a><span class="bdate" id="bdate"></span>
+  <nav class="tabs" id="tabs" aria-label="Sections">
+    <a href="#today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</a>
+    <a href="#news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>News</a>
+    <a href="#sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg>Sky</a>
+    <a href="#releases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>Releases</a>
+    <a href="#saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved</a>
+  </nav>
+  <button class="gear" id="gear" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+</div></header>
+<main id="view"></main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+// ---------- storage (falls back to memory if the browser blocks it) ----------
+const STORE_OK=(()=>{try{localStorage.setItem('alm:t','1');const ok=localStorage.getItem('alm:t')==='1';localStorage.removeItem('alm:t');return ok}catch(e){return false}})();
+const MEM={};
+const LS={get(k,d){try{const v=STORE_OK?localStorage.getItem('alm:'+k):MEM[k];return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){const s=JSON.stringify(v);MEM[k]=s;if(STORE_OK)try{localStorage.setItem('alm:'+k,s)}catch(e){}},keys(){try{return STORE_OK?Object.keys(localStorage).filter(k=>k.startsWith('alm:c:')):[]}catch(e){return[]}}};
+const DEF={name:'',birth:{date:'',time:'',noTime:false,place:'',lat:null,lon:null,tz:''},topics:['science','nature','space','technology','history','upside'],custom:[],hn:true,wiki:true,artists:[],authors:[],gameGenres:[],rel:{music:true,books:true,games:true,film:true},keys:{guardian:'',nasa:'',rawg:''}};
+const loadS=o=>{const s=Object.assign({},DEF,o||{});s.birth=Object.assign({},DEF.birth,s.birth||{});s.keys=Object.assign({},DEF.keys,s.keys||{});s.rel=Object.assign({},DEF.rel,s.rel||{});['topics','custom','artists','authors','gameGenres'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=DEF[k]});return s};
+let S=loadS(LS.get('settings',{}));
+const save=()=>LS.set('settings',S);
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=u=>/^https:\/\/[^\s"'<>]+$/.test(u||'')?u:'';
+const strip=h=>{try{return new DOMParser().parseFromString(h||'','text/html').body.textContent||''}catch(e){return ''}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)};
+const now=new Date();
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const TODAY=ymd(now);
+const DAYN=Math.floor(new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()/864e5);
+const fmtDate=(d,o)=>new Date(d).toLocaleDateString(undefined,o||{weekday:'short',day:'numeric',month:'short'});
+const ago=iso=>{const m=(Date.now()-new Date(iso))/6e4;if(!isFinite(m))return '';if(m<60)return Math.max(1,Math.round(m))+' min ago';if(m<1440)return Math.round(m/60)+' h ago';return fmtDate(iso,{day:'numeric',month:'short'})};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const wikiPath=()=>`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+async function getJSON(url,key,hours){
+  const c=LS.get('c:'+key,null);
+  if(c&&Date.now()-c.t<hours*36e5)return c.v;
+  try{const ac=new AbortController();const to=setTimeout(()=>ac.abort(),15000);const r=await fetch(url,{signal:ac.signal});clearTimeout(to);if(!r.ok)throw new Error('HTTP '+r.status);const v=await r.json();LS.set('c:'+key,{t:Date.now(),v});return v}
+  catch(e){if(c)return c.v;throw e}
+}
+const BM='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+const BMF='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+const SHUF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>';
+let saved=LS.get('saved',[]);
+const isSaved=id=>saved.some(s=>s.id===id);
+const REG={};
+function saveBtn(item){REG[item.id]=item;const on=isSaved(item.id);return `<button class="ib${on?' on':''}" data-save="${esc(item.id)}" aria-label="${on?'Remove from saved':'Save'}" title="${on?'Saved':'Save'}">${on?BMF:BM}</button>`}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-save]');if(!b)return;
+  const id=b.dataset.save;
+  if(isSaved(id)){saved=saved.filter(s=>s.id!==id);toast('Removed from saved')}else{const it=REG[id];if(!it)return;saved.unshift(Object.assign({savedAt:Date.now()},it));toast('Saved to your board')}
+  LS.set('saved',saved);const on=isSaved(id);b.classList.toggle('on',on);b.innerHTML=on?BMF:BM;
+  if(location.hash==='#saved')render();
+});
+// broken images become a generated cover
+document.addEventListener('error',e=>{const im=e.target;if(im.tagName!=='IMG'||!im.dataset.fb)return;const d=document.createElement('div');d.className='gen';d.style.background=im.dataset.bg||'#333';d.textContent=im.dataset.fb;im.replaceWith(d)},true);
+const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
+const genBg=s=>`linear-gradient(135deg,hsl(${hue(s)} 70% 45%),hsl(${(hue(s)+60)%360} 70% 30%))`;
+
+// ---------- content ----------
+const POEMS=[
+["Sonnet 18","William Shakespeare",`Shall I compare thee to a summer's day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer's lease hath all too short a date;
+Sometime too hot the eye of heaven shines,
+And often is his gold complexion dimm'd;
+And every fair from fair sometime declines,
+By chance or nature's changing course untrimm'd;
+But thy eternal summer shall not fade,
+Nor lose possession of that fair thou ow'st;
+Nor shall Death brag thou wander'st in his shade,
+When in eternal lines to time thou grow'st:
+So long as men can breathe or eyes can see,
+So long lives this, and this gives life to thee.`],
+["“Hope” is the thing with feathers","Emily Dickinson",`"Hope" is the thing with feathers -
+That perches in the soul -
+And sings the tune without the words -
+And never stops - at all -
+
+And sweetest - in the Gale - is heard -
+And sore must be the storm -
+That could abash the little Bird
+That kept so many warm -
+
+I've heard it in the chillest land -
+And on the strangest Sea -
+Yet - never - in Extremity,
+It asked a crumb - of me.`],
+["I wandered lonely as a cloud","William Wordsworth",`I wandered lonely as a cloud
+That floats on high o'er vales and hills,
+When all at once I saw a crowd,
+A host, of golden daffodils;
+Beside the lake, beneath the trees,
+Fluttering and dancing in the breeze.
+
+Continuous as the stars that shine
+And twinkle on the milky way,
+They stretched in never-ending line
+Along the margin of a bay:
+Ten thousand saw I at a glance,
+Tossing their heads in sprightly dance.
+
+The waves beside them danced; but they
+Out-did the sparkling waves in glee:
+A poet could not but be gay,
+In such a jocund company:
+I gazed—and gazed—but little thought
+What wealth the show to me had brought:
+
+For oft, when on my couch I lie
+In vacant or in pensive mood,
+They flash upon that inward eye
+Which is the bliss of solitude;
+And then my heart with pleasure fills,
+And dances with the daffodils.`],
+["Nothing Gold Can Stay","Robert Frost",`Nature's first green is gold,
+Her hardest hue to hold.
+Her early leaf's a flower;
+But only so an hour.
+Then leaf subsides to leaf.
+So Eden sank to grief,
+So dawn goes down to day.
+Nothing gold can stay.`],
+["Fire and Ice","Robert Frost",`Some say the world will end in fire,
+Some say in ice.
+From what I've tasted of desire
+I hold with those who favor fire.
+But if it had to perish twice,
+I think I know enough of hate
+To say that for destruction ice
+Is also great
+And would suffice.`],
+["Stopping by Woods on a Snowy Evening","Robert Frost",`Whose woods these are I think I know.
+His house is in the village though;
+He will not see me stopping here
+To watch his woods fill up with snow.
+
+My little horse must think it queer
+To stop without a farmhouse near
+Between the woods and frozen lake
+The darkest evening of the year.
+
+He gives his harness bells a shake
+To ask if there is some mistake.
+The only other sound's the sweep
+Of easy wind and downy flake.
+
+The woods are lovely, dark and deep,
+But I have promises to keep,
+And miles to go before I sleep,
+And miles to go before I sleep.`],
+["The Road Not Taken","Robert Frost",`Two roads diverged in a yellow wood,
+And sorry I could not travel both
+And be one traveler, long I stood
+And looked down one as far as I could
+To where it bent in the undergrowth;
+
+Then took the other, as just as fair,
+And having perhaps the better claim,
+Because it was grassy and wanted wear;
+Though as for that the passing there
+Had worn them really about the same,
+
+And both that morning equally lay
+In leaves no step had trodden black.
+Oh, I kept the first for another day!
+Yet knowing how way leads on to way,
+I doubted if I should ever come back.
+
+I shall be telling this with a sigh
+Somewhere ages and ages hence:
+Two roads diverged in a wood, and I—
+I took the one less traveled by,
+And that has made all the difference.`],
+["When You Are Old","W. B. Yeats",`When you are old and grey and full of sleep,
+And nodding by the fire, take down this book,
+And slowly read, and dream of the soft look
+Your eyes had once, and of their shadows deep;
+
+How many loved your moments of glad grace,
+And loved your beauty with love false or true,
+But one man loved the pilgrim soul in you,
+And loved the sorrows of your changing face;
+
+And bending down beside the glowing bars,
+Murmur, a little sadly, how Love fled
+And paced upon the mountains overhead
+And hid his face amid a crowd of stars.`],
+["The Lake Isle of Innisfree","W. B. Yeats",`I will arise and go now, and go to Innisfree,
+And a small cabin build there, of clay and wattles made;
+Nine bean-rows will I have there, a hive for the honey-bee,
+And live alone in the bee-loud glade.
+
+And I shall have some peace there, for peace comes dropping slow,
+Dropping from the veils of the morning to where the cricket sings;
+There midnight's all a glimmer, and noon a purple glow,
+And evening full of the linnet's wings.
+
+I will arise and go now, for always night and day
+I hear lake water lapping with low sounds by the shore;
+While I stand on the roadway, or on the pavements grey,
+I hear it in the deep heart's core.`],
+["Ozymandias","Percy Bysshe Shelley",`I met a traveller from an antique land,
+Who said—"Two vast and trunkless legs of stone
+Stand in the desert. . . . Near them, on the sand,
+Half sunk a shattered visage lies, whose frown,
+And wrinkled lip, and sneer of cold command,
+Tell that its sculptor well those passions read
+Which yet survive, stamped on these lifeless things,
+The hand that mocked them, and the heart that fed;
+And on the pedestal, these words appear:
+My name is Ozymandias, King of Kings;
+Look on my Works, ye Mighty, and despair!
+Nothing beside remains. Round the decay
+Of that colossal Wreck, boundless and bare
+The lone and level sands stretch far away."`],
+["Bright Star","John Keats",`Bright star, would I were stedfast as thou art—
+Not in lone splendour hung aloft the night
+And watching, with eternal lids apart,
+Like nature's patient, sleepless Eremite,
+The moving waters at their priestlike task
+Of pure ablution round earth's human shores,
+Or gazing on the new soft-fallen mask
+Of snow upon the mountains and the moors—
+No—yet still stedfast, still unchangeable,
+Pillow'd upon my fair love's ripening breast,
+To feel for ever its soft fall and swell,
+Awake for ever in a sweet unrest,
+Still, still to hear her tender-taken breath,
+And so live ever—or else swoon to death.`],
+["Remember","Christina Rossetti",`Remember me when I am gone away,
+Gone far away into the silent land;
+When you can no more hold me by the hand,
+Nor I half turn to go yet turning stay.
+Remember me when no more day by day
+You tell me of our future that you planned:
+Only remember me; you understand
+It will be late to counsel then or pray.
+Yet if you should forget me for a while
+And afterwards remember, do not grieve:
+For if the darkness and corruption leave
+A vestige of the thoughts that once I had,
+Better by far you should forget and smile
+Than that you should remember and be sad.`],
+["Crossing the Bar","Alfred, Lord Tennyson",`Sunset and evening star,
+And one clear call for me!
+And may there be no moaning of the bar,
+When I put out to sea,
+
+But such a tide as moving seems asleep,
+Too full for sound and foam,
+When that which drew from out the boundless deep
+Turns again home.
+
+Twilight and evening bell,
+And after that the dark!
+And may there be no sadness of farewell,
+When I embark;
+
+For tho' from out our bourne of Time and Place
+The flood may bear me far,
+I hope to see my Pilot face to face
+When I have crost the bar.`],
+["A Noiseless Patient Spider","Walt Whitman",`A noiseless patient spider,
+I mark'd where on a little promontory it stood isolated,
+Mark'd how to explore the vacant vast surrounding,
+It launch'd forth filament, filament, filament, out of itself,
+Ever unreeling them, ever tirelessly speeding them.
+
+And you O my soul where you stand,
+Surrounded, detached, in measureless oceans of space,
+Ceaselessly musing, venturing, throwing, seeking the spheres to connect them,
+Till the bridge you will need be form'd, till the ductile anchor hold,
+Till the gossamer thread you fling catch somewhere, O my soul.`],
+["There Will Come Soft Rains","Sara Teasdale",`There will come soft rains and the smell of the ground,
+And swallows circling with their shimmering sound;
+
+And frogs in the pools singing at night,
+And wild plum trees in tremulous white;
+
+Robins will wear their feathery fire,
+Whistling their whims on a low fence-wire;
+
+And not one will know of the war, not one
+Will care at last when it is done.
+
+Not one would mind, neither bird nor tree,
+If mankind perished utterly;
+
+And Spring herself, when she woke at dawn
+Would scarcely know that we were gone.`],
+["Loveliest of trees, the cherry now","A. E. Housman",`Loveliest of trees, the cherry now
+Is hung with bloom along the bough,
+And stands about the woodland ride
+Wearing white for Eastertide.
+
+Now, of my threescore years and ten,
+Twenty will not come again,
+And take from seventy springs a score,
+It only leaves me fifty more.
+
+And since to look at things in bloom
+Fifty springs are little room,
+About the woodlands I will go
+To see the cherry hung with snow.`],
+["The Tyger","William Blake",`Tyger Tyger, burning bright,
+In the forests of the night;
+What immortal hand or eye,
+Could frame thy fearful symmetry?
+
+In what distant deeps or skies.
+Burnt the fire of thine eyes?
+On what wings dare he aspire?
+What the hand, dare seize the fire?
+
+And what shoulder, & what art,
+Could twist the sinews of thy heart?
+And when thy heart began to beat,
+What dread hand? & what dread feet?
+
+What the hammer? what the chain,
+In what furnace was thy brain?
+What the anvil? what dread grasp,
+Dare its deadly terrors clasp!
+
+When the stars threw down their spears
+And water'd heaven with their tears:
+Did he smile his work to see?
+Did he who made the Lamb make thee?
+
+Tyger Tyger burning bright,
+In the forests of the night:
+What immortal hand or eye,
+Dare frame thy fearful symmetry?`],
+["Because I could not stop for Death","Emily Dickinson",`Because I could not stop for Death –
+He kindly stopped for me –
+The Carriage held but just Ourselves –
+And Immortality.
+
+We slowly drove – He knew no haste
+And I had put away
+My labor and my leisure too,
+For His Civility –
+
+We passed the School, where Children strove
+At Recess – in the Ring –
+We passed the Fields of Gazing Grain –
+We passed the Setting Sun –
+
+Or rather – He passed us –
+The Dews drew quivering and chill –
+For only Gossamer, my Gown –
+My Tippet – only Tulle –
+
+We paused before a House that seemed
+A Swelling of the Ground –
+The Roof was scarcely visible –
+The Cornice – in the Ground –
+
+Since then – 'tis Centuries – and yet
+Feels shorter than the Day
+I first surmised the Horses' Heads
+Were toward Eternity –`],
+["To the Virgins, to Make Much of Time","Robert Herrick",`Gather ye rosebuds while ye may,
+Old Time is still a-flying;
+And this same flower that smiles today
+Tomorrow will be dying.
+
+The glorious lamp of heaven, the sun,
+The higher he's a-getting,
+The sooner will his race be run,
+And nearer he's to setting.
+
+That age is best which is the first,
+When youth and blood are warmer;
+But being spent, the worse, and worst
+Times still succeed the former.
+
+Then be not coy, but use your time,
+And while ye may, go marry;
+For having lost but once your prime,
+You may forever tarry.`],
+["A Red, Red Rose","Robert Burns",`O my Luve is like a red, red rose
+That's newly sprung in June;
+O my Luve is like the melody
+That's sweetly play'd in tune.
+
+So fair art thou, my bonnie lass,
+So deep in luve am I;
+And I will luve thee still, my dear,
+Till a' the seas gang dry.
+
+Till a' the seas gang dry, my dear,
+And the rocks melt wi' the sun;
+I will luve thee still, my dear,
+While the sands o' life shall run.
+
+And fare thee weel, my only luve!
+And fare thee weel awhile!
+And I will come again, my luve,
+Though it were ten thousand mile.`],
+["Sonnet 116","William Shakespeare",`Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove.
+O no! it is an ever-fixed mark
+That looks on tempests and is never shaken;
+It is the star to every wand'ring bark,
+Whose worth's unknown, although his height be taken.
+Love's not Time's fool, though rosy lips and cheeks
+Within his bending sickle's compass come;
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+If this be error and upon me prov'd,
+I never writ, nor no man ever lov'd.`],
+["She Walks in Beauty","Lord Byron",`She walks in beauty, like the night
+Of cloudless climes and starry skies;
+And all that's best of dark and bright
+Meet in her aspect and her eyes;
+Thus mellowed to that tender light
+Which heaven to gaudy day denies.
+
+One shade the more, one ray the less,
+Had half impaired the nameless grace
+Which waves in every raven tress,
+Or softly lightens o'er her face;
+Where thoughts serenely sweet express,
+How pure, how dear their dwelling-place.
+
+And on that cheek, and o'er that brow,
+So soft, so calm, yet eloquent,
+The smiles that win, the tints that glow,
+But tell of days in goodness spent,
+A mind at peace with all below,
+A heart whose love is innocent!`],
+["Tell all the truth but tell it slant","Emily Dickinson",`Tell all the truth but tell it slant —
+Success in Circuit lies
+Too bright for our infirm Delight
+The Truth's superb surprise
+As Lightning to the Children eased
+With explanation kind
+The Truth must dazzle gradually
+Or every man be blind —`],
+["Requiem","Robert Louis Stevenson",`Under the wide and starry sky,
+Dig the grave and let me lie.
+Glad did I live and gladly die,
+And I laid me down with a will.
+
+This be the verse you grave for me:
+Here he lies where he longed to be;
+Home is the sailor, home from sea,
+And the hunter home from the hill.`],
+["Pied Beauty","Gerard Manley Hopkins",`Glory be to God for dappled things –
+For skies of couple-colour as a brinded cow;
+For rose-moles all in stipple upon trout that swim;
+Fresh-firecoal chestnut-falls; finches' wings;
+Landscape plotted and pieced – fold, fallow, and plough;
+And all trades, their gear and tackle and trim.
+
+All things counter, original, spare, strange;
+Whatever is fickle, freckled (who knows how?)
+With swift, slow; sweet, sour; adazzle, dim;
+He fathers-forth whose beauty is past change:
+Praise him.`],
+["Auguries of Innocence (opening)","William Blake",`To see a World in a Grain of Sand
+And a Heaven in a Wild Flower
+Hold Infinity in the palm of your hand
+And Eternity in an hour`]
+];
+
+const FACTS=[
+"Octopuses have three hearts and blue blood: their blood carries oxygen with copper rather than iron.",
+"A day on Venus (about 243 Earth days) is longer than its year (about 225 Earth days). It also spins backwards compared with most planets.",
+"Botanically, bananas are berries and strawberries are not.",
+"Sharks are older than trees. Sharks appear in the fossil record around 450 million years ago; the first trees about 385 million years ago.",
+"Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid of Giza.",
+"Teaching at Oxford began around 1096, more than two centuries before the Aztecs founded Tenochtitlan in 1325.",
+"The Eiffel Tower is about 15 cm taller on hot summer days, because its iron expands in the heat.",
+"Sunlight takes about 8 minutes and 20 seconds to reach Earth, so you always see the Sun as it was a few minutes ago.",
+"A teaspoon of neutron-star material would weigh around a billion tonnes on Earth.",
+"Tardigrades, tiny eight-legged animals, have survived exposure to the vacuum of space in experiments.",
+"The Rubik's Cube was invented in Budapest in 1974 by Ernő Rubik, a professor of architecture who wanted to teach spatial thinking.",
+"Albert Szent-Györgyi won the 1937 Nobel Prize for work on vitamin C, which he extracted in quantity from Szeged paprika.",
+"The ballpoint pen was patented by the Hungarian journalist László Bíró in 1938. In Argentina and the UK, a pen is still called a 'biro'.",
+"Budapest's Line 1 metro, opened in 1896, is the oldest electric underground railway on the European continent.",
+"There are more possible games of chess (about 10^120) than there are atoms in the observable universe (about 10^80).",
+"The Moon is drifting away from Earth by about 3.8 cm every year, roughly as fast as your fingernails grow.",
+"Crows can recognise individual human faces and remember people who treated them badly for years.",
+"A lightning bolt can heat the air to around 30,000 °C, about five times hotter than the Sun's surface.",
+"Butterflies taste with sensors on their feet.",
+"Koala fingerprints are so similar to human ones that they are hard to tell apart under a microscope.",
+"The shortest war on record, between Britain and Zanzibar in 1896, lasted under an hour.",
+"Scotland's national animal is the unicorn.",
+"The dot over a lowercase i or j is called a tittle.",
+"Sea otters often hold paws while they sleep so they don't drift apart.",
+"Antarctica is the largest desert on Earth: a desert is defined by low precipitation, not heat.",
+"Unwound, the DNA in a single human cell would stretch about two metres.",
+"Olympus Mons on Mars is about 22 km high, roughly two and a half times the height of Everest.",
+"Hippos produce a reddish secretion that works as a natural sunscreen and antiseptic.",
+"A pineapple plant takes about two years to produce a single fruit.",
+"Nintendo was founded in 1889 in Kyoto, making hand-painted playing cards.",
+"In the 1830s, tomato ketchup was sold in the United States as a medicine.",
+"Glass frogs have such transparent skin on their bellies that you can see their hearts beating.",
+"Flamingos are born grey. They turn pink from pigments called carotenoids in the algae and shrimp they eat.",
+"A group of flamingos is called a flamboyance.",
+"Roughly half of the oxygen we breathe is produced by ocean plankton, not land plants.",
+"The mantis shrimp's punch accelerates about as fast as a small-calibre bullet and can crack aquarium glass.",
+"Your brain is about 2% of your body weight but uses about 20% of its energy.",
+"In 1947, engineers found a moth trapped in the Harvard Mark II computer and taped it in the logbook as the 'first actual case of bug being found'.",
+"Alexander Fleming noticed penicillin in 1928 because mould had contaminated a dish he had left out while on holiday.",
+"In physics, a 'jiffy' is a real unit: the time light takes to travel one centimetre, about 33 trillionths of a second.",
+"Polar bears have black skin under their fur, which is actually transparent and hollow, not white.",
+"Starfish have no brain; a nerve ring and radial nerves coordinate their arms.",
+"Cats cannot taste sweetness: they lack a working gene for the sweet-taste receptor.",
+"Saturn is less dense than water. In a big enough bath, it would float.",
+"Honey can stay edible for an extraordinarily long time, because its low water content and acidity stop most microbes growing.",
+"Wombats produce cube-shaped droppings, thanks to the varying elasticity of their intestines.",
+"There are more trees on Earth (about 3 trillion) than stars in the Milky Way (100 to 400 billion).",
+"Bees can be trained to recognise human faces using the same tricks they use to remember flowers.",
+"The Amazon rainforest is fertilised partly by dust blown across the Atlantic from the Sahara.",
+"Water can boil and freeze at the same time at its 'triple point': 0.01 °C under very low pressure."
+];
+
+const HISTORY=[
+["The Great Molasses Flood","Boston, 1919","A huge storage tank on Boston's waterfront burst on a mild January day and released about 8.7 million litres of molasses. A brown wave several metres high swept through the North End at an estimated 50 km/h, flattening buildings and killing 21 people. Residents claimed the area smelled sweet on hot days for decades. The disaster led to stricter rules on engineering calculations and building permits."],
+["The Dancing Plague","Strasbourg, 1518","In July 1518 a woman began dancing in the street and could not stop. Within weeks dozens of others had joined her. The authorities first decided the cure was more dancing and hired musicians and a stage, which only made things worse. Historians still debate the cause, from mass stress during famine to religious fear of a curse linked to Saint Vitus."],
+["The Christmas Truce","Western Front, 1914","On Christmas Eve 1914, German soldiers set up candlelit trees along their trenches and sang carols. British troops answered, and along stretches of the front men climbed out into no man's land to swap cigarettes, buttons and food, bury their dead and, in some places, kick a football around. Commanders made sure it never happened on that scale again."],
+["The Great Emu War","Western Australia, 1932","After the First World War, farmland in Western Australia was invaded by around 20,000 emus. The government sent soldiers armed with machine guns. The birds scattered, ran fast and proved very hard to hit, and after weeks of effort the operation was called off. The emus are generally considered to have won."],
+["Semmelweis and the washed hands","Vienna, 1847","The Hungarian doctor Ignác Semmelweis noticed that far more mothers died of fever in the ward run by doctors than in the one run by midwives. Doctors often came straight from dissecting bodies. When he made them wash their hands in chlorinated lime, deaths fell dramatically. Many colleagues rejected his idea, and his insight was only fully accepted after germ theory arrived years after his death."],
+["The Great Stink","London, 1858","A hot summer turned the sewage-filled Thames into an open drain, and the smell was so bad that Parliament considered moving out. Lawmakers who had delayed for years suddenly funded Joseph Bazalgette's plan for huge intercepting sewers. His tunnels and embankments still carry much of London's waste today and helped end the city's cholera outbreaks."],
+["The Antikythera mechanism","Greek shipwreck, about 100 BC","Divers off the island of Antikythera in 1901 recovered a lump of corroded bronze. Over a century of study, including X-ray scans, revealed dozens of interlocking gears: a hand-cranked device that predicted the positions of the Sun and Moon, the phases of the Moon, eclipses and even the timing of the Olympic Games. Nothing as complex is known again for over a thousand years."],
+["Harrison's clocks","Britain, 1730s to 1770s","Sailors could find latitude from the stars, but not longitude, and ships were lost because of it. A self-taught carpenter, John Harrison, spent decades building clocks that kept accurate time at sea. By comparing local noon with the time back home, a navigator could finally work out how far east or west they were."],
+["Tulip mania","The Netherlands, 1637","In the 1630s, rare tulip bulbs with streaked petals became wildly fashionable in the Dutch Republic. Contracts for single bulbs reportedly traded for the price of a house. In February 1637 buyers suddenly stopped turning up and prices collapsed. Historians now think the damage was smaller than legend says, but the story became a byword for speculative bubbles."],
+["Three towns become Budapest","Hungary, 1873","Until 1873, Buda, Óbuda and Pest were separate towns facing each other across the Danube. The Chain Bridge, opened in 1849, had linked them permanently for the first time. In 1873 they were officially merged into one city, Budapest, which grew so fast over the next few decades that it became one of Europe's great capitals."],
+["The siege of Eger","Hungary, 1552","A huge Ottoman army besieged the castle of Eger, defended by about two thousand soldiers and townspeople under István Dobó. For more than a month they held out, famously helped by women who joined the defence on the walls. The besiegers finally withdrew. The story became a national legend through Géza Gárdonyi's novel Eclipse of the Crescent Moon."],
+["The Carrington Event","Worldwide, 1859","On 1 September 1859 the astronomer Richard Carrington saw a brilliant flash on the Sun. Within a day, the strongest geomagnetic storm on record hit Earth. Auroras were seen near the tropics, and telegraph lines sparked; some operators found they could send messages with their batteries disconnected. A storm that size today would threaten power grids and satellites."],
+["The year without a summer","Europe and North America, 1816","The eruption of Mount Tambora in Indonesia in 1815 threw so much ash and sulphur into the sky that 1816 turned cold and wet. Crops failed and food prices soared. Stuck indoors by the rain at Lake Geneva, a group of writers held a ghost-story contest, and the 18-year-old Mary Shelley began writing Frankenstein."],
+["The Rosetta Stone","Egypt, 1799","French soldiers rebuilding a fort near the town of Rashid found a slab carved with the same decree in three scripts: hieroglyphs, Demotic and ancient Greek. Because scholars could read the Greek, it became the key to Egyptian writing. In 1822 Jean-François Champollion announced he had cracked the hieroglyphs."],
+["Shackleton's Endurance","Antarctica, 1915 to 2022","Ernest Shackleton's ship Endurance was crushed by pack ice in 1915. Every one of the 28 men survived after camping on ice floes, sailing lifeboats to Elephant Island and making an 1,300 km open-boat crossing to South Georgia. In 2022 the wreck was found 3,000 metres down in the Weddell Sea, remarkably intact, with its name still on the stern."],
+["Mansa Musa's journey","Mali to Mecca, 1324","Mansa Musa, ruler of the Mali Empire, travelled to Mecca with an enormous caravan carrying gold. In Cairo he spent and gave away so much that the value of gold there dropped for years. His journey put Mali on European maps, where he was drawn holding a golden nugget, and he funded scholarship and mosques in Timbuktu."],
+["The cave of Lascaux","France, 1940","Four teenagers and a dog went looking for a rumoured tunnel near Montignac and slipped into a cave covered in paintings of horses, bulls and deer, about 17,000 years old. So many visitors came after the war that their breath damaged the paintings, and the cave was closed in 1963. Visitors now see precise replicas."],
+["Apollo 13","Space, 1970","Two days into the flight to the Moon, an oxygen tank exploded. The crew moved into the lunar module, designed for two people for two days, and used it as a lifeboat for four. Engineers on the ground worked out how to fit square carbon-dioxide filters into round sockets using items on board. All three astronauts returned safely."],
+["Phineas Gage","Vermont, 1848","A railway foreman, Phineas Gage, was packing explosive into a rock when it went off and drove an iron rod through his skull. He survived and could talk within minutes. Friends said his personality changed, and his case became one of the first clues that particular parts of the brain shape behaviour and self-control."],
+["Gutenberg's press","Mainz, about 1450","Johannes Gutenberg combined movable metal type, oil-based ink and a press adapted from wine-making. His Bible, finished around 1455, was the first major book printed this way in Europe. Within fifty years millions of books were circulating, and ideas began to travel faster than any authority could control them."],
+["The Defenestration of Prague","Bohemia, 1618","Protestant nobles angry at the Habsburgs threw two royal officials and their secretary out of a castle window in Prague. All three survived the 20-metre fall; Catholics said angels saved them, Protestants said they landed on a dung heap. The incident helped start the Thirty Years' War."],
+["Graffiti of Pompeii","Roman Italy, AD 79","The ash that buried Pompeii also preserved thousands of scribbles on its walls: election slogans, advertisements, jokes, love notes and complaints about neighbours. They are some of the best evidence we have of how ordinary Romans actually wrote and thought, far from the polished speeches of senators."]
+];
+
+const WORDS=[
+["petrichor","noun","The earthy smell that rises when rain falls on dry ground."],
+["apricity","noun","The warmth of the sun on a cold winter day."],
+["susurrus","noun","A soft whispering or rustling sound, like wind in leaves."],
+["hiraeth","noun, Welsh","A deep longing for a home you can't return to, or that never was."],
+["saudade","noun, Portuguese","A bittersweet longing for someone or something absent."],
+["komorebi","noun, Japanese","Sunlight filtering through the leaves of trees."],
+["serendipity","noun","Finding something good by happy accident."],
+["ephemeral","adjective","Lasting a very short time."],
+["liminal","adjective","Relating to a threshold or in-between state."],
+["halcyon","adjective","Calm, peaceful and happy, usually of a remembered time."],
+["mellifluous","adjective","Sweet and smooth to hear."],
+["sobremesa","noun, Spanish","Time spent lingering at the table, talking, after a meal."],
+["hygge","noun, Danish","A cosy, contented feeling of warmth and togetherness."],
+["wabi-sabi","noun, Japanese","Finding beauty in imperfection and impermanence."],
+["fernweh","noun, German","An ache for distant places; the opposite of homesickness."],
+["eunoia","noun","Goodwill and kindness of mind towards others."],
+["quixotic","adjective","Idealistic in a way that is unrealistic or impractical."],
+["palimpsest","noun","Something reused or altered that still shows traces of its earlier form."],
+["crepuscular","adjective","Of twilight; active at dawn and dusk."],
+["numinous","adjective","Having a strong spiritual or mysterious quality."],
+["lagom","adverb, Swedish","Just the right amount; not too much, not too little."],
+["tsundoku","noun, Japanese","Buying books and letting them pile up unread."],
+["ultracrepidarian","noun","Someone who gives opinions on things beyond their knowledge."],
+["flâneur","noun, French","A person who strolls the city to observe it."],
+["kintsugi","noun, Japanese","Repairing broken pottery with gold, honouring the cracks."],
+["peripatetic","adjective","Travelling from place to place; walking while thinking."],
+["gloaming","noun","Twilight; the soft fading light after sunset."],
+["sonorous","adjective","Deep, full and rich in sound."],
+["vellum","noun","Fine parchment made from calfskin, used for manuscripts."],
+["defenestration","noun","The act of throwing someone out of a window."],
+["mudita","noun, Pali","Joy in the happiness and success of others."],
+["solivagant","adjective","Wandering alone."]
+];
+
+const QUESTIONS=[
+"What is something you understand now that you didn't a year ago?",
+"Which small thing went well today?",
+"What would you learn if you had a free month and no pressure to be good at it?",
+"Who taught you something without knowing they did?",
+"What are you curious about but haven't looked into yet?",
+"What did you enjoy as a child that you could bring back for an hour this week?",
+"Which book, song or film changed how you see something?",
+"What's one opinion you've changed your mind about?",
+"Where do you feel most like yourself?",
+"What would make tomorrow ten percent better?",
+"What is a question you'd love to ask someone from 500 years ago?",
+"What's a skill that looks easy until you try it?",
+"What are you looking forward to this month?",
+"Which of your habits would your future self thank you for?",
+"What did you notice today that most people walked past?",
+"If you could master one subject overnight, which would it be?",
+"What's the best advice you've ignored?",
+"Which place would you like to see before it changes?",
+"What do you want to spend less time on?",
+"Who could you send a kind message to today?",
+"What's a mystery of science you'd love to see solved?",
+"What would you put in a time capsule to explain your life now?"
+];
+
+const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SG=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'].map(s=>s+'︎');
+const SIGNTXT=['bold, direct, quick to start','steady, sensual, patient','curious, quick, sociable','caring, protective, sensitive','warm, proud, expressive','precise, helpful, observant','fair, charming, relational','intense, private, loyal','free, honest, seeking','ambitious, disciplined, dry','original, independent, idealistic','imaginative, gentle, intuitive'];
+const ELEM=['fire','earth','air','water'];
+
+
+// ---------- astronomy ----------
+//ASTRO-START
+const D2R=Math.PI/180,R2D=180/Math.PI;
+const norm=a=>((a%360)+360)%360;
+const wrap=a=>{a=norm(a);return a>180?a-360:a};
+const jdOf=ms=>ms/864e5+2440587.5;
+const EL={
+me:[0.38709927,0.00000037,0.20563593,0.00001906,7.00497902,-0.00594749,252.25032350,149472.67411175,77.45779628,0.16047689,48.33076593,-0.12534081],
+ve:[0.72333566,0.00000390,0.00677672,-0.00004107,3.39467605,-0.00078890,181.97909950,58517.81538729,131.60246718,0.00268329,76.67984255,-0.27769418],
+ea:[1.00000261,0.00000562,0.01671123,-0.00004392,-0.00001531,-0.01294668,100.46457166,35999.37244981,102.93768193,0.32327364,0,0],
+ma:[1.52371034,0.00001847,0.09339410,0.00007882,1.84969142,-0.00813131,-4.55343205,19140.30268499,-23.94362959,0.44441088,49.55953891,-0.29257343],
+ju:[5.20288700,-0.00011607,0.04838624,-0.00013253,1.30439695,-0.00183714,34.39644051,3034.74612775,14.72847983,0.21252668,100.47390909,0.20469106],
+sa:[9.53667594,-0.00125060,0.05386179,-0.00050991,2.48599187,0.00193609,49.95424423,1222.49362201,92.59887831,-0.41897216,113.66242448,-0.28867794],
+ur:[19.18916464,-0.00196176,0.04725744,-0.00004397,0.77263783,-0.00242939,313.23810451,428.48202785,170.95427630,0.40805281,74.01692503,0.04240589],
+ne:[30.06992276,0.00026291,0.00859048,0.00005105,1.77004347,0.00035372,-55.12002969,218.45945325,44.96476227,-0.32241464,131.78422574,-0.00508664],
+pl:[39.48211675,-0.00031596,0.24882730,0.00005170,17.14001206,0.00004818,238.92903833,145.20780515,224.06891629,-0.04062942,110.30393684,-0.01183482]};
+function helio(k,T){
+  const e=EL[k],a=e[0]+e[1]*T,ec=e[2]+e[3]*T,I=(e[4]+e[5]*T)*D2R,L=e[6]+e[7]*T,vp=e[8]+e[9]*T,Om=e[10]+e[11]*T;
+  const w=(vp-Om)*D2R,O=Om*D2R;let M=wrap(L-vp)*D2R;
+  let E=M+ec*Math.sin(M);for(let i=0;i<10;i++)E-=(E-ec*Math.sin(E)-M)/(1-ec*Math.cos(E));
+  const xp=a*(Math.cos(E)-ec),yp=a*Math.sqrt(1-ec*ec)*Math.sin(E);
+  const cw=Math.cos(w),sw=Math.sin(w),cO=Math.cos(O),sO=Math.sin(O),cI=Math.cos(I),sI=Math.sin(I);
+  return[(cw*cO-sw*sO*cI)*xp+(-sw*cO-cw*sO*cI)*yp,(cw*sO+sw*cO*cI)*xp+(-sw*sO+cw*cO*cI)*yp,(sw*sI)*xp+(cw*sI)*yp];
+}
+function lonOf(b,ms){
+  const T=(jdOf(ms)-2451545)/36525,prec=1.396971*T,s=x=>Math.sin(x*D2R);
+  if(b==='mo'){
+    const L0=218.3165+481267.8813*T,Mm=134.9634+477198.8676*T,Ms=357.5291+35999.0503*T,F=93.2721+483202.0175*T,D=297.8502+445267.1115*T;
+    return norm(L0+6.289*s(Mm)+1.274*s(2*D-Mm)+0.658*s(2*D)+0.214*s(2*Mm)-0.186*s(Ms)-0.114*s(2*F)-0.059*s(2*D-2*Mm)-0.057*s(2*D-Ms-Mm)+0.053*s(2*D+Mm)+0.046*s(2*D-Ms)+0.041*s(Mm-Ms)-0.035*s(D)-0.031*s(Mm+Ms));
+  }
+  if(b==='nn')return norm(125.0445479-1934.1362891*T);
+  const E=helio('ea',T);
+  if(b==='su')return norm(Math.atan2(-E[1],-E[0])*R2D+prec);
+  const P=helio(b,T);return norm(Math.atan2(P[1]-E[1],P[0]-E[0])*R2D+prec);
+}
+function angles(ms,lat,lon){
+  const jd=jdOf(ms),T=(jd-2451545)/36525;
+  const gmst=norm(280.46061837+360.98564736629*(jd-2451545)+0.000387933*T*T);
+  const r=norm(gmst+lon)*D2R,eps=(23.4393-0.013*T)*D2R;
+  const mc=norm(Math.atan2(Math.sin(r),Math.cos(r)*Math.cos(eps))*R2D);
+  const asc=norm(Math.atan2(Math.cos(r),-(Math.sin(r)*Math.cos(eps)+Math.tan(lat*D2R)*Math.sin(eps)))*R2D);
+  return{asc,mc};
+}
+function tzOff(tz,ms){
+  const f=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const p={};for(const x of f.formatToParts(new Date(ms)))p[x.type]=x.value;
+  return Date.UTC(+p.year,+p.month-1,+p.day,+p.hour%24,+p.minute,+p.second)-ms;
+}
+function localToUtc(date,time,tz){
+  const[y,m,d]=date.split('-').map(Number),[h,mi]=(time||'12:00').split(':').map(Number);
+  const g=Date.UTC(y,m-1,d,h,mi);let ms=g;
+  try{ms=g-tzOff(tz,g);ms=g-tzOff(tz,ms)}catch(e){}
+  return ms;
+}
+//ASTRO-END
+const BODIES=['su','mo','me','ve','ma','ju','sa','ur','ne','pl','nn'];
+const PN={su:'Sun',mo:'Moon',me:'Mercury',ve:'Venus',ma:'Mars',ju:'Jupiter',sa:'Saturn',ur:'Uranus',ne:'Neptune',pl:'Pluto',nn:'North Node',asc:'Ascendant',mc:'Midheaven'};
+const PG={su:'☉',mo:'☽',me:'☿',ve:'♀',ma:'♂',ju:'♃',sa:'♄',ur:'♅',ne:'♆',pl:'♇',nn:'☊',asc:'AC',mc:'MC'};
+const g=k=>PG[k].length===1?PG[k]+'︎':PG[k];
+const signOf=l=>Math.floor(norm(l)/30);
+const fmtPos=l=>{const d=norm(l)%30;return `${Math.floor(d)}°${String(Math.floor((d%1)*60)).padStart(2,'0')}′ ${SIGNS[signOf(l)]}`};
+const TP={su:'attention and vitality',mo:'moods and instincts',me:'thoughts, messages and plans',ve:'affection, pleasure and money matters',ma:'drive, heat and impatience',ju:'growth, optimism and opportunity',sa:'pressure, structure and maturity',ur:'surprise, change and a need for freedom',ne:'dreams, intuition and some fog',pl:'deep change and questions of power'};
+const NP={su:'your core self',mo:'your feelings and need for comfort',me:'how you think and speak',ve:'your relationships and pleasures',ma:'your drive and courage',ju:'your hopes and generosity',sa:'your duties and fears',ur:'your independent streak',ne:'your dreams and ideals',pl:'your deepest drives',asc:'how you come across',mc:'your career and public path'};
+const ASP=[[0,'conjunct','conj','A strong, concentrated start: what begins now tends to matter.'],[60,'sextile','soft','An opening that rewards a small step on your part.'],[90,'square','hard','Friction that pushes you to act, adjust or decide.'],[120,'trine','soft','Ease and natural flow; good time to make progress.'],[180,'opposite','hard','Tension that often shows up through other people; look for balance.']];
+const DUR={mo:'a few hours',su:'a day or two',me:'a day or two',ve:'a day or two',ma:'about a week',ju:'a couple of weeks',sa:'a few weeks',ur:'months, in several passes',ne:'months, in several passes',pl:'months, in several passes'};
+const SPAN={su:45,me:45,ve:45,ma:90,ju:240,sa:365,ur:365,ne:365,pl:365};
+
+function natal(){
+  const b=S.birth;if(!b.date)return null;
+  const tz=b.tz||Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const ms=localToUtc(b.date,b.noTime||!b.time?'12:00':b.time,tz);
+  const pts={};BODIES.forEach(k=>pts[k]=lonOf(k,ms));
+  const hasAng=!b.noTime&&b.time&&b.lat!=null;
+  if(hasAng){const a=angles(ms,b.lat,b.lon);pts.asc=a.asc;pts.mc=a.mc}
+  return{ms,pts,hasAng};
+}
+function transits(nat){
+  const day=864e5,start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12).getTime();
+  const targets=Object.keys(nat.pts).filter(k=>k!=='nn'&&!(k==='mo'&&!nat.hasAng&&S.birth.noTime));
+  const out=[],today=[];
+  for(const t of Object.keys(SPAN)){
+    const n=SPAN[t],L=[];for(let i=0;i<=n;i++)L.push(lonOf(t,start+i*day));
+    for(const p of targets){
+      for(const[A,name,kind,tone]of ASP){
+        for(const sgn of(A===0||A===180)?[1]:[1,-1]){
+          const tgt=nat.pts[p]+sgn*A;let prev=wrap(L[0]-tgt);
+          if(Math.abs(prev)<(t==='su'||t==='me'||t==='ve'?1.5:2.5))today.push({t,p,name,kind,tone,orb:Math.abs(prev)});
+          for(let i=1;i<=n;i++){const f=wrap(L[i]-tgt);
+            if(prev!==0&&Math.sign(f)!==Math.sign(prev)&&Math.abs(f)<20&&Math.abs(prev)<20){
+              const frac=prev/(prev-f);out.push({t,p,name,kind,tone,ms:start+(i-1+frac)*day});
+            }prev=f;}
+        }
+      }
+    }
+  }
+  const nowMs=Date.now();
+  const mo=lonOf('mo',nowMs);
+  for(const p of targets)for(const[A,name,kind,tone]of ASP)for(const sgn of(A===0||A===180)?[1]:[1,-1]){const o=Math.abs(wrap(mo-nat.pts[p]-sgn*A));if(o<5)today.push({t:'mo',p,name,kind,tone,orb:o})}
+  out.sort((a,b)=>a.ms-b.ms);
+  today.sort((a,b)=>a.orb-b.orb);
+  return{up:out.filter(x=>x.ms>nowMs-day),today};
+}
+const aspText=x=>`Brings ${TP[x.t]} to ${NP[x.p]}. ${x.tone}`;
+const kindTag=k=>k==='hard'?'<span class="tag t-hard">challenging</span>':k==='soft'?'<span class="tag t-soft">supportive</span>':'<span class="tag t-conj">intense</span>';
+
+function moonSvg(ms){
+  const p=norm(lonOf('mo',ms)-lonOf('su',ms)),r=46,k=Math.cos(p*D2R),wax=p<180,rx=Math.abs(k)*r;
+  const sl=wax?1:0,st=wax?(k>0?0:1):(k>0?1:0);
+  const names=['New moon','Waxing crescent','First quarter','Waxing gibbous','Full moon','Waning gibbous','Last quarter','Waning crescent'];
+  const name=names[Math.floor(norm(p+22.5)/45)%8],ill=Math.round((1-k)/2*100);
+  const svg=`<circle r="${r}" fill="#45305a"/><path d="M0,${-r} A${r},${r} 0 0 ${sl} 0,${r} A${rx.toFixed(2)},${r} 0 0 ${st} 0,${-r}Z" fill="var(--moon)"/><circle r="${r}" fill="none" stroke="rgba(255,255,255,.25)"/>`;
+  return{svg,name,ill,p};
+}
+
+
+
+const HOUSES=['self and appearance','money and values','learning and conversation','home and family','creativity and romance','work and daily health','partnership','intimacy and shared resources','travel and beliefs','career and reputation','friends and community','solitude and the inner life'];
+const PHASE_NOTE=['A new beginning: a good night to set an intention.','The light is growing: take the first small step.','Halfway to full: push through the first obstacle.','Almost full: refine and adjust what you started.','Full moon: things come to light and feelings run high.','Share what you have learned and give thanks.','Last quarter: let go of what is not working.','The cycle closes: rest, reflect and clear space.'];
+const ordinal=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+
+// ---------- visits ----------
+let visits=LS.get('visits',{last:'',streak:0,days:[]});
+if(visits.last!==TODAY){const y=new Date(now);y.setDate(y.getDate()-1);visits.streak=visits.last===ymd(y)?visits.streak+1:1;visits.last=TODAY;visits.days=[...(visits.days||[]),TODAY].slice(-60);LS.set('visits',visits)}
+const seeded=(seed,n,fn)=>{let s=seed;const r=()=>(s=s*16807%2147483647)/2147483647;return Array.from({length:n},()=>fn(r)).join('')};
+const starField=(seed,n)=>seeded(seed,n,r=>`<circle cx="${(r()*100).toFixed(2)}%" cy="${(r()*100).toFixed(2)}%" r="${(r()*1.3+.3).toFixed(2)}" fill="#fff" opacity="${(r()*.6+.2).toFixed(2)}"/>`);
+
+// ---------- TODAY ----------
+const pick=(arr,salt)=>arr[((DAYN*7+salt*13)%arr.length+arr.length)%arr.length];
+const shuffled={};
+const cur=(k,arr,salt)=>shuffled[k]!=null?arr[shuffled[k]]:pick(arr,salt);
+function dayLine(){
+  const m=moonSvg(Date.now()),idx=Math.floor(norm(m.p+22.5)/45)%8;
+  const nat=natal();
+  if(nat){try{const t=transits(nat).today.filter(x=>x.t!=='mo')[0]||transits(nat).today[0];if(t)return `<b>${PN[t.t]} ${t.name} your ${PN[t.p]}</b>: ${esc(cap(TP[t.t]))} for ${esc(NP[t.p])}. ${esc(PHASE_NOTE[idx])}`}catch(e){}}
+  return esc(PHASE_NOTE[idx]);
+}
+function viewToday(){
+  const po=cur('poem',POEMS,1),fa=cur('fact',FACTS,2),hi=cur('hist',HISTORY,3),wo=cur('word',WORDS,4),qu=cur('q',QUESTIONS,5);
+  const h=now.getHours(),part=h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  const m=moonSvg(Date.now()),ms=SIGNS[signOf(lonOf('mo',Date.now()))],ss=SIGNS[signOf(lonOf('su',Date.now()))];
+  const yr=(hi[1].match(/\d{3,4}/)||[''])[0];
+  const days=Array.from({length:14},(_,i)=>{const d=new Date(now);d.setDate(d.getDate()-13+i);return(visits.days||[]).includes(ymd(d))});
+  const shuf=k=>`<button class="ib" data-shuf="${k}" aria-label="Show another" title="Show another">${SHUF}</button>`;
+  return `<section class="hero-t"><svg class="stars" aria-hidden="true">${starField(DAYN%997+11,80)}</svg>
+  <div class="wrap ht"><div>
+    <p class="kick">${esc(now.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'}))}</p>
+    <h1>${esc(part)}${S.name?', '+esc(S.name):''}</h1>
+    <p class="oneline">${dayLine()}</p>
+    <div class="meta"><span>Sun in ${ss}</span><span>Moon in ${ms}</span><span>${visits.streak} day${visits.streak===1?'':'s'} in a row</span></div>
+  </div>
+  <figure class="bigmoon"><svg viewBox="-60 -60 120 120" role="img" aria-label="${esc(m.name)}">${m.svg}</svg><figcaption><b>${esc(m.name)}</b>${m.ill}% lit</figcaption></figure></div></section>
+  <div class="wrap tgrid">
+   <div class="col">
+    <article class="pane c-fact"><p class="label">Did you know?</p><div class="tools">${shuf('fact')}${saveBtn({id:'f:'+fa.slice(0,40),kind:'Fact',title:'Did you know?',text:fa})}</div><p class="q">${esc(fa)}</p></article>
+    <article class="pane c-poem"><p class="label">Poem of the day</p><div class="tools">${shuf('poem')}${saveBtn({id:'p:'+po[0],kind:'Poem',title:po[0],sub:po[1],text:po[2]})}</div><h3>${esc(po[0])}</h3><p class="by">${esc(po[1])}</p><p class="orn" aria-hidden="true">❦</p><div class="verse">${esc(po[2])}</div></article>
+    <article class="pane c-q"><p class="label">Something to think about</p><div class="tools">${shuf('q')}</div><p class="hand">${esc(qu)}</p><div class="streak" title="Your last 14 days">${days.map(d=>`<i class="${d?'on':''}"></i>`).join('')}</div><p class="small muted" style="margin:6px 0 0">Your visits over the last two weeks</p></article>
+   </div>
+   <div class="col">
+    <article class="pane c-hist"><p class="label">From the archive</p><div class="tools">${shuf('hist')}${saveBtn({id:'h:'+hi[0],kind:'History',title:hi[0],sub:hi[1],text:hi[2]})}</div>${yr?`<div class="stamp" aria-hidden="true">${esc(yr)}</div>`:''}<h3>${esc(hi[0])}</h3><p class="where">${esc(hi[1])}</p><p class="body">${esc(hi[2])}</p></article>
+    <article class="pane c-word"><div class="tools">${shuf('word')}${saveBtn({id:'w:'+wo[0],kind:'Word',title:wo[0],sub:wo[1],text:wo[2]})}</div><p class="label">Word of the day</p><p class="hw">${esc(wo[0])}</p><p class="pos">${esc(wo[1])}</p><p class="def"><b>1.</b><span>${esc(wo[2])}</span></p></article>
+    <article class="pane c-otd"><p class="label">On this day</p><ul class="tl" id="otd"><li><b>…</b><span class="muted">Opening the history books</span></li></ul></article>
+   </div>
+  </div>
+  <div class="wrap tgrid2">
+    <article class="pane c-art" id="art"><p class="label">Artwork of the day</p><div class="skel"></div></article>
+    <article class="pane c-apod" id="apod"><div class="in"><p class="label">Astronomy picture of the day</p><div class="skel"></div></div></article>
+  </div>
+  <div class="wrap"><article class="pane c-read" id="tfa"><div><p class="label">Today's long read</p><div class="skel"></div></div></article></div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-shuf]');if(!b)return;const k=b.dataset.shuf,arr={poem:POEMS,fact:FACTS,hist:HISTORY,word:WORDS,q:QUESTIONS}[k];let i;do{i=Math.floor(Math.random()*arr.length)}while(arr.length>1&&i===shuffled[k]);shuffled[k]=i;const y=scrollY;render();scrollTo(0,y)});
+function fillToday(){
+  getJSON(`https://en.wikipedia.org/api/rest_v1/feed/featured/${wikiPath()}`,'wf:'+TODAY,6).then(j=>{
+    const o=$('#otd');if(o){const ev=(j.onthisday||[]).slice(0,6);o.innerHTML=ev.length?ev.map(x=>`<li><b>${esc(x.year)}</b><span>${esc(x.text)}</span></li>`).join(''):'<li><b></b><span class="muted">Nothing listed today.</span></li>'}
+    const t=$('#tfa');if(t&&j.tfa){const a=j.tfa,url=safeUrl(a.content_urls?.desktop?.page),img=safeUrl(a.originalimage?.source||a.thumbnail?.source),title=a.titles?.normalized||a.title;const it={id:'t:'+a.title,kind:'Long read',title,text:a.extract,url};
+      t.classList.toggle('has',!!img);
+      t.innerHTML=`${img?`<img src="${esc(img)}" alt="">`:''}<div><p class="label">Today's long read · Wikipedia featured article</p><div class="tools">${saveBtn(it)}</div><h3>${esc(title)}</h3><p>${esc(a.extract)}</p>${url?`<a class="btn ghost" href="${esc(url)}" target="_blank" rel="noopener">Read the full article</a>`:''}</div>`}
+    else if(t)t.innerHTML='<div><p class="label">Today\'s long read</p><p class="err">No featured article today.</p></div>';
+  }).catch(()=>{const o=$('#otd');if(o)o.innerHTML='<li><b></b><span class="err">Couldn\'t reach Wikipedia. Check your connection.</span></li>';const t=$('#tfa');if(t)t.innerHTML='<div><p class="label">Today\'s long read</p><p class="err">Couldn\'t reach Wikipedia.</p></div>'});
+  getJSON(`https://api.nasa.gov/planetary/apod?api_key=${encodeURIComponent(S.keys.nasa||'DEMO_KEY')}`,'apod:'+TODAY,12).then(a=>{
+    const el=$('#apod');if(!el)return;const img=a.media_type==='image'?safeUrl(a.url):'';const link=safeUrl(a.hdurl||a.url);const it={id:'a:'+a.date,kind:'Space',title:a.title,text:a.explanation,url:link,img};
+    el.innerHTML=`${img?`<img src="${esc(img)}" alt="${esc(a.title)}">`:''}<div class="in"><p class="label">Astronomy picture of the day · NASA</p><div class="tools" style="${img?'top:auto;bottom:auto;':''}">${saveBtn(it)}</div><h3>${esc(a.title)}</h3><p class="small" style="margin:0;opacity:.8">${esc((a.explanation||'').slice(0,380))}${(a.explanation||'').length>380?'…':''}</p>${!img&&link?`<p><a href="${esc(link)}" target="_blank" rel="noopener">Watch today's video</a></p>`:''}</div>`;
+  }).catch(()=>{const el=$('#apod');if(el)el.innerHTML='<div class="in"><p class="label">Astronomy picture of the day</p><p class="err">NASA\'s picture couldn\'t load. The shared demo key allows only a few requests an hour; add your own free key in Settings.</p></div>'});
+  const page=(DAYN%95)+1;
+  getJSON(`https://api.artic.edu/api/v1/artworks/search?q=painting&query[term][is_public_domain]=true&limit=10&page=${page}&fields=id,title,artist_display,date_display,image_id,medium_display`,'art:'+TODAY,24).then(j=>{
+    const el=$('#art');if(!el)return;const a=(j.data||[]).find(x=>x.image_id);if(!a)throw 0;
+    const img=`https://www.artic.edu/iiif/2/${encodeURIComponent(a.image_id)}/full/843,/0/default.jpg`,url='https://www.artic.edu/artworks/'+encodeURIComponent(a.id);
+    const it={id:'art:'+a.id,kind:'Art',title:a.title,sub:a.artist_display,text:a.date_display,url,img};
+    el.innerHTML=`<p class="label">Artwork of the day</p><div class="tools">${saveBtn(it)}</div><div class="frame"><div class="mat"><img src="${esc(img)}" alt="${esc(a.title)}"></div></div><br><div class="plaque"><b>${esc(a.title)}</b>${esc(a.artist_display||'')}<br>${esc(a.date_display||'')}${a.medium_display?' · '+esc(a.medium_display):''}<br><a href="${esc(url)}" target="_blank" rel="noopener">Art Institute of Chicago</a></div>`;
+  }).catch(()=>{const el=$('#art');if(el)el.innerHTML='<p class="label">Artwork of the day</p><p class="err">The museum collection couldn\'t load right now.</p>'});
+}
+
+// ---------- NEWS ----------
+const TOPICS={science:['Science',{section:'science'}],nature:['Nature & climate',{section:'environment'}],space:['Space',{tag:'science/space'}],technology:['Technology',{section:'technology'}],history:['History & archaeology',{tag:'science/archaeology'}],upside:['Good news & progress',{tag:'world/series/the-upside'},'breakthrough'],health:['Health & mind',{tag:'science/medical-research'},'medical research'],culture:['Culture',{section:'culture'}],art:['Art & design',{section:'artanddesign'}],books:['Books',{section:'books'}],food:['Food',{section:'food'}],travel:['Travel',{section:'travel'}]};
+let newsFilter='all',newsQ='';
+function gUrl(params,size){const u=new URLSearchParams(Object.assign({'order-by':'newest','page-size':String(size||9),'show-fields':'trailText,thumbnail','api-key':S.keys.guardian||'test'},params));return 'https://content.guardianapis.com/search?'+u}
+async function guardian(id,params,fallbackQ,size){
+  let j=await getJSON(gUrl(params,size),'g:'+id+':'+TODAY,3);let r=j?.response?.results||[];
+  if(!r.length&&fallbackQ){j=await getJSON(gUrl({q:fallbackQ},size),'gq:'+id+':'+TODAY,3);r=j?.response?.results||[]}
+  return r.map(x=>({id:'g:'+x.id,kind:x.sectionName||'News',title:x.webTitle,text:strip(x.fields?.trailText),img:safeUrl(x.fields?.thumbnail),url:safeUrl(x.webUrl),src:'The Guardian · '+(x.sectionName||''),when:x.webPublicationDate}));
+}
+function newsGroups(){
+  const gr=S.topics.filter(t=>TOPICS[t]).map(t=>({id:t,label:TOPICS[t][0],load:()=>guardian(t,TOPICS[t][1],TOPICS[t][2]||TOPICS[t][0])}));
+  S.custom.forEach(k=>gr.push({id:'k:'+k,label:cap(k),load:()=>guardian('k:'+k,{q:k},null)}));
+  if(S.hn)gr.push({id:'hn',label:'Hacker News',load:async()=>{const j=await getJSON('https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=12','hn:'+TODAY+':'+now.getHours(),2);return(j.hits||[]).map(h=>({id:'hn:'+h.objectID,kind:'Tech',title:h.title,url:safeUrl(h.url)||('https://news.ycombinator.com/item?id='+encodeURIComponent(h.objectID)),src:`Hacker News · ${h.points} points`,when:h.created_at}))}});
+  if(S.wiki)gr.push({id:'wiki',label:'The world today',load:async()=>{const j=await getJSON(`https://en.wikipedia.org/api/rest_v1/feed/featured/${wikiPath()}`,'wf:'+TODAY,6);return(j.news||[]).map((n,i)=>{const l=(n.links||[])[0];return{id:'wn:'+TODAY+i,kind:'World',title:strip(n.story),img:safeUrl(l?.thumbnail?.source),url:safeUrl(l?.content_urls?.desktop?.page),src:'Wikipedia · In the news'}})}});
+  return gr;
+}
+const story=(it,lead)=>{REG[it.id]=it;const img=it.img&&(lead||it.thumb)?`<img src="${esc(it.img)}" alt="" loading="lazy">`:'';return `<article class="story${lead?' lead':''}${img?' has':''}" data-txt="${esc((it.title+' '+(it.text||'')).toLowerCase())}">${lead?img:''}<div>${!lead?img:''}<h3>${it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>`:esc(it.title)}</h3>${it.text?`<p>${esc(it.text.length>(lead?320:170)?it.text.slice(0,lead?320:170)+'…':it.text)}</p>`:''}<div class="by">${esc(it.src||'')}${it.when?' · '+esc(ago(it.when)):''}</div></div>${saveBtn(it)}</article>`};
+function viewNews(){
+  const gr=newsGroups();
+  const ed=gr.map(g=>g.label).slice(0,5).join(', ')+(gr.length>5?' and more':'');
+  return `<div class="wrap"><header class="mast-n"><div class="ear"><span>Your personal edition</span><span>No ads, no feed</span></div><h1>The Daily Mind</h1>
+  <div class="dl"><span>${esc(now.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'}))}</span><span>${esc(ed||'Choose your topics in Settings')}</span></div></header>
+  ${gr.length?`<div class="secnav" role="group" aria-label="Sections"><button data-nf="all" aria-pressed="${newsFilter==='all'}">Front page</button>${gr.map(g=>`<button data-nf="${esc(g.id)}" aria-pressed="${newsFilter===g.id}">${esc(g.label)}</button>`).join('')}</div>
+  <div class="nsearch"><input type="search" id="nq" placeholder="Search today's stories" value="${esc(newsQ)}" aria-label="Search today's stories"></div>
+  ${gr.filter(g=>newsFilter==='all'||newsFilter===g.id).map(g=>`<section class="nsec"><h2>${esc(g.label)}<small></small></h2><div class="paper" data-g="${esc(g.id)}"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section>`).join('')}
+  <p class="small muted" style="margin:30px 0 40px;text-align:center">From The Guardian, Hacker News and Wikipedia. Refreshed every few hours.</p>`:`<div class="empty">No topics chosen yet. <a href="#settings">Pick some in Settings</a>.</div>`}</div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-nf]');if(!b)return;newsFilter=b.dataset.nf;render()});
+document.addEventListener('input',e=>{if(e.target.id!=='nq')return;newsQ=e.target.value.trim().toLowerCase();filterNews()});
+function filterNews(){document.querySelectorAll('.story').forEach(s=>s.style.display=!newsQ||s.dataset.txt.includes(newsQ)?'':'none')}
+async function fillNews(){
+  const gr=newsGroups().filter(g=>newsFilter==='all'||newsFilter===g.id);
+  for(const g of gr){
+    const box=document.querySelector(`[data-g="${CSS.escape(g.id)}"]`);if(!box)continue;
+    try{const items=await g.load();const n=newsFilter==='all'?7:14;box.innerHTML=items.length?items.slice(0,n).map((it,i)=>story(Object.assign(it,{thumb:i<4}),i===0)).join(''):'<p class="err">Nothing new here today.</p>';filterNews()}
+    catch(e){box.innerHTML=`<p class="err">Couldn't load this section right now.${g.id==='hn'||g.id==='wiki'?'':' If it keeps happening, add a free Guardian key in Settings.'}</p>`}
+    await sleep(120);
+  }
+}
+
+// ---------- SKY ----------
+function wheel(pts,asc,hasAng,today){
+  const C=200,R0=192,R1=160,RP=130,RA=98,pos=l=>{const th=(180-(l-asc))*D2R;return r=>[(C+r*Math.cos(th)).toFixed(1),(C-r*Math.sin(th)).toFixed(1)]};
+  const gold='#e8c873',el=['#ff8a7c','#c9e39a','#f6e08a','#9cc6ff'];
+  let s=`<defs><radialGradient id="wg"><stop offset="0" stop-color="#2a1f63"/><stop offset="1" stop-color="#120e33"/></radialGradient></defs><circle cx="200" cy="200" r="${R0}" fill="url(#wg)" stroke="${gold}" stroke-opacity=".7"/>`;
+  for(let i=0;i<12;i++){const a1=pos(i*30)(R0),a2=pos(i*30)(R1);s+=`<line x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}" stroke="${gold}" stroke-opacity=".5"/>`;const m=pos(i*30+15)((R0+R1)/2);s+=`<text x="${m[0]}" y="${m[1]}" fill="${el[i%4]}" font-size="18" text-anchor="middle" dominant-baseline="central">${SG[i]}</text>`}
+  s+=`<circle cx="200" cy="200" r="${R1}" fill="#0f0b2c" stroke="${gold}" stroke-opacity=".7"/><circle cx="200" cy="200" r="${RA}" fill="#0a0822" stroke="${gold}" stroke-opacity=".35"/>`;
+  for(let d=0;d<360;d+=5){const a=pos(d)(R1),b=pos(d)(R1-(d%30?4:9));s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${gold}" stroke-opacity=".45"/>`}
+  if(hasAng){for(let i=0;i<12;i++){const l=signOf(asc)*30+i*30,a=pos(l)(RA),b=pos(l)(R1-12);s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#fff" stroke-opacity=".07"/>`;const n=pos(l+5)(RA+9);s+=`<text x="${n[0]}" y="${n[1]}" fill="#fff" fill-opacity=".35" font-size="9" text-anchor="middle" dominant-baseline="central">${i+1}</text>`}
+    const A=pos(asc),D=pos(asc+180),M=pos(pts.mc),I=pos(pts.mc+180);
+    s+=`<line x1="${A(R1)[0]}" y1="${A(R1)[1]}" x2="${D(R1)[0]}" y2="${D(R1)[1]}" stroke="${gold}" stroke-width="1.4"/><line x1="${M(R1)[0]}" y1="${M(R1)[1]}" x2="${I(R1)[0]}" y2="${I(R1)[1]}" stroke="${gold}" stroke-dasharray="3 3"/>`;
+    const at=pos(asc)(R1-22),mt=pos(pts.mc)(R1-22);s+=`<text x="${at[0]}" y="${+at[1]-10}" fill="${gold}" font-size="11" font-weight="700" text-anchor="middle">AC</text><text x="${+mt[0]+12}" y="${mt[1]}" fill="${gold}" font-size="11" font-weight="700" text-anchor="middle">MC</text>`}
+  const ks=Object.keys(pts).filter(k=>k!=='asc'&&k!=='mc');
+  for(let i=0;i<ks.length;i++)for(let j=i+1;j<ks.length;j++){const d=Math.abs(wrap(pts[ks[i]]-pts[ks[j]]));for(const[A,,kind]of ASP){if(A===0)continue;if(Math.abs(d-A)<(A===60?4:6)){const a=pos(pts[ks[i]])(RA),b=pos(pts[ks[j]])(RA);s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${kind==='hard'?'#ff7a6a':'#8fb0ff'}" stroke-opacity=".8" stroke-width="1.1"/>`}}}
+  const sorted=ks.map(k=>({k,l:pts[k]})).sort((a,b)=>a.l-b.l),place=sorted.map(x=>x.l);
+  for(let it=0;it<8;it++)for(let i=0;i<place.length;i++){const j=(i+1)%place.length;const d=wrap(place[j]-place[i]);if(d>=0&&d<9){place[i]-=(9-d)/2;place[j]+=(9-d)/2}}
+  sorted.forEach((x,i)=>{const p=pos(place[i])(RP),t=pos(x.l)(R1-2),u=pos(place[i])(RP+13);s+=`<line x1="${t[0]}" y1="${t[1]}" x2="${u[0]}" y2="${u[1]}" stroke="#fff" stroke-opacity=".35"/><text x="${p[0]}" y="${p[1]}" fill="#fff" font-size="20" text-anchor="middle" dominant-baseline="central">${g(x.k)}</text>`});
+  if(today)['su','mo','me','ve','ma','ju','sa','ur','ne','pl'].forEach(k=>{const p=pos(lonOf(k,Date.now()))(R0);s+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.6" fill="#ff7a6a" stroke="#0c0a22"/>`});
+  return `<svg viewBox="0 0 400 400" role="img" aria-label="Chart wheel" font-family="'Segoe UI Symbol','Noto Sans Symbols','Apple Symbols',Manrope,sans-serif">${s}</svg>`;
+}
+function viewSky(){
+  const nat=natal(),nowMs=Date.now(),sky={};BODIES.forEach(k=>sky[k]=lonOf(k,nowMs));
+  const retro=k=>!['su','mo','nn'].includes(k)&&wrap(lonOf(k,nowMs+864e5)-lonOf(k,nowMs))<0;
+  const retros=BODIES.filter(retro).map(k=>PN[k]);
+  const table=`<div class="scroll"><table><thead><tr><th>Planet</th><th>Today</th>${nat?'<th>At your birth</th>':''}</tr></thead><tbody>${BODIES.filter(k=>k!=='nn').map(k=>`<tr><td>${g(k)} ${PN[k]}</td><td>${fmtPos(sky[k])}${retro(k)?' <span class="tag t-hard">Rx</span>':''}</td>${nat?`<td>${fmtPos(nat.pts[k])}</td>`:''}</tr>`).join('')}${nat&&nat.hasAng?`<tr><td>AC Ascendant</td><td></td><td>${fmtPos(nat.pts.asc)}</td></tr><tr><td>MC Midheaven</td><td></td><td>${fmtPos(nat.pts.mc)}</td></tr>`:''}</tbody></table></div>`;
+  if(!nat){
+    return `<div class="wrap skyv"><h1>The sky tonight</h1><p class="sub">Where the planets stand right now. Add your birth details to turn this into your own chart.</p>
+    <div class="skyhero"><div class="wheel">${wheel(sky,0,false,false)}</div>
+    <div class="big3"><div class="callout"><b style="font:700 22px 'Cinzel',serif;color:#f3e2ad;display:block;margin-bottom:6px">Make it yours</b><p style="margin:0 0 14px;font:italic 16px/1.5 var(--lit)">Enter your birth date, time and city to see your chart, a reading of each planet, and the transits coming up for you.</p><a class="btn acc" href="#settings">Add birth details</a></div>
+    <div><small>The Moon</small><b><span>${SG[signOf(sky.mo)]}</span>${SIGNS[signOf(sky.mo)]}</b><p>${esc(moonSvg(nowMs).name)}${retros.length?`. Retrograde now: ${retros.join(', ')}.`:''}</p></div></div></div>
+    <div class="glass" style="margin-top:28px"><h2>Planets now</h2>${table}</div></div>`;
+  }
+  const tr=transits(nat),P=nat.pts;
+  const seen=new Set();const today=tr.today.filter(x=>{const k=x.t+x.p+x.name;if(seen.has(k))return false;seen.add(k);return true}).slice(0,4);
+  const lim={su:21,me:14,ve:21,ma:45,ju:120,sa:365,ur:365,ne:365,pl:365},slow=['ju','sa','ur','ne','pl'];
+  const up=tr.up.filter(x=>x.ms<Date.now()+lim[x.t]*864e5&&!(x.t==='me'&&!['su','mo','asc','mc','me'].includes(x.p)));
+  const pickUp=[...up.filter(x=>slow.includes(x.t)).slice(0,6),...up.filter(x=>!slow.includes(x.t)).slice(0,10)].sort((a,b)=>a.ms-b.ms);
+  let lastM='';const route=pickUp.map(x=>{const d=new Date(x.ms),m=d.toLocaleDateString(undefined,{month:'long',year:'numeric'});const head=m!==lastM?`<span class="mo">${esc(m)}</span>`:'';lastM=m;return `${head}<li><div class="disc"><div><b>${d.getDate()}</b><small>${esc(d.toLocaleDateString(undefined,{weekday:'short'}))}</small></div></div><div><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)} Felt for ${DUR[x.t]}.</p></div></li>`}).join('');
+  const house=l=>nat.hasAng?((signOf(l)-signOf(P.asc)+12)%12):-1;
+  const three=[['Sun',P.su,'Who you are'],['Moon',P.mo,'What you need'+(S.birth.noTime?' (approximate)':'')],nat.hasAng?['Rising',P.asc,'How you come across']:null].filter(Boolean);
+  const reading=['su','mo','me','ve','ma','ju','sa','ur','ne','pl'].map(k=>{const sg=signOf(P[k]),h=house(P[k]);return `<li><span class="gl">${g(k)}</span><div><h4>${PN[k]} in ${SIGNS[sg]}${h>=0?`, ${ordinal(h+1)} house`:''}</h4><p>${esc(cap(NP[k]))}: ${esc(SIGNTXT[sg])}${h>=0?`, showing up most in ${esc(HOUSES[h])}`:''}.</p></div></li>`}).join('');
+  return `<div class="wrap skyv"><h1>Your sky</h1><p class="sub">${esc(S.birth.place||'')}${S.birth.place?' · ':''}${esc(fmtDate(S.birth.date+'T12:00',{day:'numeric',month:'long',year:'numeric'}))}${S.birth.noTime||!S.birth.time?' · birth time unknown, so no rising sign or houses':' · '+esc(S.birth.time)}</p>
+  <div class="skyhero"><div class="wheel">${wheel(P,nat.hasAng?P.asc:0,nat.hasAng,true)}<p class="small muted" style="text-align:center;margin:8px 0 0">Your birth planets inside; coral dots on the rim are today's planets.</p></div>
+    <div class="big3">${three.map(([n,l,d])=>`<div><small>${n} · ${d}</small><b><span>${SG[signOf(l)]}</span>${SIGNS[signOf(l)]}</b><p>${cap(SIGNTXT[signOf(l)])}; a ${ELEM[signOf(l)%4]} sign.</p></div>`).join('')}</div></div>
+  <div class="skygrid">
+    <div class="glass"><h2>Today for you</h2>${today.length?`<ul class="asp">${today.map(x=>`<li><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)}</p></li>`).join('')}</ul>`:'<p class="muted" style="margin:0">A quiet sky for you today: no close aspects to your chart.</p>'}<p class="small muted" style="margin:16px 0 0">The Moon is in ${SIGNS[signOf(sky.mo)]}, ${esc(moonSvg(nowMs).name.toLowerCase())}${retros.length?`. Retrograde: ${retros.join(', ')}`:''}.</p></div>
+    <div class="glass"><h2>Coming up</h2><p class="small muted" style="margin:-6px 0 6px">Big slow transits for the year ahead, quicker personal ones for the next few weeks.</p>${route?`<ul class="route">${route}</ul>`:'<p class="muted">No major transits in the coming weeks.</p>'}</div>
+  </div>
+  <div class="glass" style="margin-top:20px"><h2>Your chart, read</h2><ul class="reading">${reading}</ul></div>
+  <div class="glass" style="margin-top:20px"><h2>Planet positions</h2>${table}</div>
+  <p class="small muted" style="margin-top:16px">Positions are calculated on your device to within about a degree. Readings follow traditional astrology and are offered for reflection and fun.</p></div>`;
+}
+
+// ---------- RELEASES ----------
+const soon=d=>{if(!d)return '';const n=Math.round((new Date(d+'T12:00')-now)/864e5);return n>1?`in ${n} days`:n===1?'tomorrow':n===0?'out today':''};
+function rcard(it,style){REG[it.id]=it;const t=it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>`:esc(it.title);
+  const im=it.img?`<img src="${esc(it.img)}" alt="" loading="lazy" data-fb="${esc(it.title.slice(0,40))}" data-bg="${esc(genBg(it.title))}">`:`<div class="gen" style="background:${genBg(it.title)}">${esc(it.title.slice(0,40))}</div>`;
+  const b=it.badge?`<span class="badge">${esc(it.badge)}</span>`:'';
+  if(style==='music')return `<article class="rc"><div class="sleeve"><div class="disc"></div><div class="art">${im}</div></div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+  if(style==='books')return `<article class="rc"><div class="cover">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+  if(style==='games')return `<article class="rc"><div class="cart">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.75">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+  return `<article class="rc ticket"><span class="adm">Admit one</span><h3>${t}</h3><p>${esc((it.text||'').slice(0,140))}</p><p class="small" style="opacity:.6">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+}
+function viewReleases(){
+  const r=S.rel,bl=[];
+  if(r.music)bl.push(['music','Music',S.artists.length?`New and upcoming from ${S.artists.slice(0,4).join(', ')}${S.artists.length>4?' and more':''}, plus this week's album reviews.`:'This week\'s album reviews. Add your favourite artists in Settings to follow their new releases.']);
+  if(r.books)bl.push(['books','Books',S.authors.length?`Latest from ${S.authors.slice(0,4).join(', ')}${S.authors.length>4?' and more':''}, plus new book reviews.`:'New book reviews. Add favourite authors in Settings to follow their new books.']);
+  if(r.games)bl.push(['games','Games',S.keys.rawg?'The release calendar for the next three months'+(S.gameGenres.length?', in your genres':'')+', plus reviews.':'Game news and reviews. Add a free RAWG key in Settings for a full release calendar.']);
+  if(r.film)bl.push(['film','Film & TV','Fresh reviews of what\'s on.']);
+  return `<section class="rel-hero"><div class="wrap"><h1>New <span>for you</span></h1><p>Records, books, games and films, picked from what you follow.</p></div></section>
+  ${bl.length?bl.map(([id,t,d])=>`<section class="band b-${id}"><div class="wrap"><h2>${t}</h2><p class="bsub">${esc(d)}</p><div class="shelf" data-rel="${id}"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div></section>`).join(''):`<div class="wrap empty">Choose what to follow in <a href="#settings">Settings</a>.</div>`}`;
+}
+async function fillReleases(){
+  const put=(id,items,msg)=>{const b=document.querySelector(`[data-rel="${id}"]`);if(b)b.innerHTML=items.length?items.map(x=>rcard(x,id)).join(''):`<p class="err">${msg||'Nothing found right now.'}</p>`};
+  const from=new Date(now);from.setDate(from.getDate()-120);const fromS=ymd(from);const jobs=[];
+  if(S.rel.music)jobs.push((async()=>{
+    let items=[];
+    for(const a of S.artists.slice(0,10)){
+      try{const q=`artist:"${a.replace(/"/g,'')}" AND firstreleasedate:[${fromS} TO 2099-12-31]`;
+        const j=await getJSON('https://musicbrainz.org/ws/2/release-group?fmt=json&limit=6&query='+encodeURIComponent(q),'mb:'+a+':'+TODAY,12);
+        (j['release-groups']||[]).filter(x=>x.score>=80).forEach(x=>{const d=x['first-release-date']||'';items.push({id:'mb:'+x.id,kind:'Music',title:x.title,text:`${(x['artist-credit']||[]).map(c=>c.name).join(', ')} · ${x['primary-type']||'Release'}`,img:'https://coverartarchive.org/release-group/'+encodeURIComponent(x.id)+'/front-250',url:'https://musicbrainz.org/release-group/'+encodeURIComponent(x.id),src:d?'Released '+fmtDate(d.length===10?d+'T12:00':d,{day:'numeric',month:'short',year:'numeric'}):'',badge:d>TODAY?soon(d)||'coming soon':'new',d})});
+      }catch(e){}
+      await sleep(1100);
+    }
+    items.sort((a,b)=>(b.d||'').localeCompare(a.d||''));
+    try{items=items.concat(await guardian('albums',{section:'music',tag:'tone/albumreview'},'album review',8))}catch(e){}
+    put('music',items.slice(0,16));
+  })());
+  if(S.rel.books)jobs.push((async()=>{
+    let items=[];
+    for(const a of S.authors.slice(0,8)){
+      try{const j=await getJSON('https://openlibrary.org/search.json?sort=new&limit=4&fields=key,title,first_publish_year,cover_i,author_name&author='+encodeURIComponent(a),'ol:'+a+':'+TODAY,24);
+        (j.docs||[]).filter(d=>d.first_publish_year>=now.getFullYear()-2).forEach(d=>items.push({id:'ol:'+d.key,kind:'Book',title:d.title,text:(d.author_name||[]).join(', '),img:d.cover_i?`https://covers.openlibrary.org/b/id/${encodeURIComponent(d.cover_i)}-M.jpg`:'',url:'https://openlibrary.org'+String(d.key).replace(/[^\w/]/g,''),src:`Open Library · ${d.first_publish_year}`,badge:d.first_publish_year>=now.getFullYear()?'new this year':''}));
+      }catch(e){}
+      await sleep(300);
+    }
+    try{items=items.concat((await guardian('bookrev',{section:'books',tag:'tone/reviews'},'book review',10)).map(x=>Object.assign(x,{badge:'review'})))}catch(e){}
+    put('books',items.slice(0,16));
+  })());
+  if(S.rel.games)jobs.push((async()=>{
+    let items=[];
+    if(S.keys.rawg){try{const to=new Date(now);to.setDate(to.getDate()+90);
+      const j=await getJSON(`https://api.rawg.io/api/games?key=${encodeURIComponent(S.keys.rawg)}&dates=${TODAY},${ymd(to)}&ordering=-added&page_size=15${S.gameGenres.length?'&genres='+encodeURIComponent(S.gameGenres.join(',')):''}`,'rawg:'+S.gameGenres.join(',')+':'+TODAY,12);
+      items=(j.results||[]).map(x=>({id:'rw:'+x.id,kind:'Game',title:x.name,text:[(x.genres||[]).map(g=>g.name).join(', '),(x.platforms||[]).map(p=>p.platform.name).slice(0,4).join(', ')].filter(Boolean).join(' · '),img:safeUrl(x.background_image),url:'https://rawg.io/games/'+encodeURIComponent(x.slug),src:'Out '+fmtDate(x.released+'T12:00',{day:'numeric',month:'short'}),badge:soon(x.released)}));
+    }catch(e){}}
+    try{items=items.concat(await guardian('games',{section:'games'},'video games',9))}catch(e){}
+    put('games',items.slice(0,18));
+  })());
+  if(S.rel.film)jobs.push((async()=>{try{put('film',await guardian('film',{section:'film',tag:'tone/reviews'},'film review',12))}catch(e){put('film',[],'Couldn\'t load film reviews right now.')}})());
+  await Promise.all(jobs);
+}
+
+// ---------- SAVED ----------
+function viewSaved(){
+  return `<div class="wrap"><header class="corkh"><h1>Your board</h1><p style="margin:4px 0 0;font-weight:600">${saved.length?`${saved.length} thing${saved.length===1?'':'s'} pinned. They stay on this device.`:'Nothing pinned yet. Tap the bookmark on any poem, fact, story, artwork or article to pin it here.'}</p></header>
+  <div class="board">${saved.map((s,i)=>{REG[s.id]=s;const img=safeUrl(s.img);return `<article class="note" style="transform:rotate(${((i*37)%7-3)*.6}deg)">${img?`<img src="${esc(img)}" alt="" loading="lazy">`:''}<p class="k">${esc(s.kind||'')}</p><h3>${s.url&&safeUrl(s.url)?`<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener">${esc(s.title)}</a>`:esc(s.title)}</h3>${s.sub?`<p class="small" style="opacity:.75">${esc(s.sub)}</p>`:''}${s.text?(s.kind==='Poem'?`<div class="verse">${esc(s.text)}</div>`:`<p>${esc(s.text.length>260?s.text.slice(0,260)+'…':s.text)}</p>`):''}${saveBtn(s)}</article>`}).join('')}</div></div>`;
+}
+
+// ---------- SETTINGS ----------
+const GENRES=[['action','Action'],['indie','Indie'],['adventure','Adventure'],['role-playing-games-rpg','RPG'],['strategy','Strategy'],['shooter','Shooter'],['puzzle','Puzzle'],['racing','Racing'],['sports','Sports'],['simulation','Simulation'],['platformer','Platformer'],['family','Family']];
+function viewSettings(){
+  const b=S.birth,ck=(name,val,on,lab)=>`<label><input type="checkbox" name="${name}" value="${esc(val)}"${on?' checked':''}> ${esc(lab)}</label>`;
+  return `<div class="wrap setv"><h1>Settings</h1><p class="muted" style="margin:0 0 18px;max-width:62ch">Changes save automatically on this device. To set up another device, copy your setup at the bottom and paste it there.</p>
+  ${STORE_OK?'':`<div class="warn" style="margin-bottom:16px;max-width:760px"><b>This window can't keep your settings.</b> You are probably viewing the app inside a preview. Your changes work until you close it, but to keep them, open the almanac.html file directly in Chrome, Safari, Edge or Firefox, or put it on a free host.</div>`}
+  <form class="set" id="set" autocomplete="off">
+    <fieldset><legend>You</legend><label class="f" for="s-name">Your name<span class="h">Used in the greeting</span><input type="text" id="s-name" value="${esc(S.name)}" placeholder="Optional"></label></fieldset>
+    <fieldset><legend>Birth chart</legend>
+      <div class="two"><label class="f" for="s-bd">Birth date<input type="date" id="s-bd" value="${esc(b.date)}" max="${TODAY}"></label>
+      <label class="f" for="s-bt">Birth time<span class="h">Local time where you were born</span><input type="time" id="s-bt" value="${esc(b.time)}"${b.noTime?' disabled':''}></label></div>
+      <div class="checks"><label><input type="checkbox" id="s-nt"${b.noTime?' checked':''}> I don't know my birth time</label></div>
+      <label class="f" for="s-place">Birth city<span class="h">Type the city and press Find, then tap the right place</span></label>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="s-place" value="${esc(b.place)}" placeholder="e.g. Budapest"><button type="button" class="btn ghost" id="s-find">Find</button></div>
+      <div class="places" id="s-places"></div>
+      <p class="small muted" id="s-coord" style="margin:0">${b.lat!=null?`Using ${esc(b.place)}: ${(+b.lat).toFixed(2)}, ${(+b.lon).toFixed(2)}, time zone ${esc(b.tz||'from this device')}`:'No place chosen yet. Without one, the chart still works, but with no rising sign or houses.'}</p>
+      <details><summary class="small" style="cursor:pointer">Enter coordinates by hand</summary><div class="two" style="margin-top:10px"><label class="f" for="s-lat">Latitude<input type="number" step="0.0001" id="s-lat" value="${b.lat??''}"></label><label class="f" for="s-lon">Longitude (east is positive)<input type="number" step="0.0001" id="s-lon" value="${b.lon??''}"></label><label class="f" for="s-tz">Time zone<input type="text" id="s-tz" value="${esc(b.tz)}" placeholder="Europe/Budapest"></label></div></details>
+      <p class="ok" id="s-chart" style="margin:0">${b.date?'Your chart is ready. <a href="#sky">Open Sky</a>':''}</p>
+    </fieldset>
+    <fieldset><legend>News topics</legend><div class="checks">${Object.entries(TOPICS).map(([k,v])=>ck('topic',k,S.topics.includes(k),v[0])).join('')}${ck('src','hn',S.hn,'Hacker News')}${ck('src','wiki',S.wiki,'The world today (Wikipedia)')}</div>
+      <label class="f" for="s-custom">Your own topics<span class="h">Comma separated, e.g. octopus, quantum computing, Iceland</span><input type="text" id="s-custom" value="${esc(S.custom.join(', '))}"></label></fieldset>
+    <fieldset><legend>Releases</legend><div class="checks">${ck('rel','music',S.rel.music,'Music')}${ck('rel','books',S.rel.books,'Books')}${ck('rel','games',S.rel.games,'Games')}${ck('rel','film',S.rel.film,'Film & TV')}</div>
+      <label class="f" for="s-art">Favourite artists and bands<span class="h">Comma separated, up to 10</span><textarea id="s-art" placeholder="e.g. Radiohead, Billie Eilish, Bonobo">${esc(S.artists.join(', '))}</textarea></label>
+      <label class="f" for="s-auth">Favourite authors<span class="h">Comma separated, up to 8</span><textarea id="s-auth" placeholder="e.g. Ursula K. Le Guin, Andy Weir">${esc(S.authors.join(', '))}</textarea></label>
+      <div><p style="font-weight:700;font-size:14px;margin:0 0 8px">Game genres</p><div class="checks">${GENRES.map(([k,v])=>ck('genre',k,S.gameGenres.includes(k),v)).join('')}</div></div></fieldset>
+    <fieldset><legend>Free keys (optional)</legend><p class="small muted" style="margin:0">Everything works without these, using shared demo access that can run out. Free personal keys make it reliable.</p>
+      <label class="f" for="s-kg">Guardian key<span class="h">Free at open-platform.theguardian.com (developer key)</span><input type="password" id="s-kg" value="${esc(S.keys.guardian)}"></label>
+      <label class="f" for="s-kn">NASA key<span class="h">Free at api.nasa.gov</span><input type="password" id="s-kn" value="${esc(S.keys.nasa)}"></label>
+      <label class="f" for="s-kr">RAWG key for game releases<span class="h">Free at rawg.io/apidocs</span><input type="password" id="s-kr" value="${esc(S.keys.rawg)}"></label></fieldset>
+    <fieldset><legend>Move to another device</legend>
+      <div class="row"><button type="button" class="btn ghost" id="s-copy">Copy my setup</button><button type="button" class="btn ghost" id="s-paste">Paste a setup</button><button type="button" class="btn ghost" id="s-clear">Refresh all news now</button></div>
+      <textarea id="s-io" placeholder="Your setup code appears here. Or paste one from another device and press Paste a setup." style="font-size:13px"></textarea></fieldset>
+    <div class="savebar"><button class="btn acc" type="submit">Save</button><span class="ok" id="s-msg" role="status">${STORE_OK?'Changes save automatically':''}</span></div>
+  </form></div>`;
+}
+function bindSettings(){
+  const f=$('#set');if(!f)return;
+  const nt=$('#s-nt'),list=v=>v.split(',').map(s=>s.trim()).filter(Boolean);
+  const collect=()=>{
+    const all=n=>[...f.querySelectorAll(`input[name=${n}]:checked`)].map(i=>i.value);
+    const lat=parseFloat($('#s-lat').value),lon=parseFloat($('#s-lon').value);let tz=$('#s-tz').value.trim();
+    if(tz){try{new Intl.DateTimeFormat('en',{timeZone:tz})}catch(e){tz=''}}
+    S.name=$('#s-name').value.trim();
+    S.birth={date:$('#s-bd').value,time:$('#s-bt').value,noTime:nt.checked,place:$('#s-place').value.trim(),lat:isFinite(lat)?lat:null,lon:isFinite(lon)?lon:null,tz};
+    S.topics=all('topic');const src=all('src');S.hn=src.includes('hn');S.wiki=src.includes('wiki');S.custom=list($('#s-custom').value).slice(0,8);
+    const rel=all('rel');S.rel={music:rel.includes('music'),books:rel.includes('books'),games:rel.includes('games'),film:rel.includes('film')};
+    S.artists=list($('#s-art').value).slice(0,10);S.authors=list($('#s-auth').value).slice(0,8);S.gameGenres=all('genre');
+    S.keys={guardian:$('#s-kg').value.trim(),nasa:$('#s-kn').value.trim(),rawg:$('#s-kr').value.trim()};
+    save();
+    const ok=LS.get('settings',{}).birth?.date===S.birth.date;
+    $('#s-msg').textContent=ok?'Saved ✓':'Could not save on this device';
+    $('#s-chart').innerHTML=S.birth.date?'Your chart is ready. <a href="#sky">Open Sky</a>':'';
+  };
+  let tm;const auto=()=>{clearTimeout(tm);tm=setTimeout(collect,350)};
+  f.addEventListener('input',auto);f.addEventListener('change',auto);
+  f.onsubmit=e=>{e.preventDefault();collect();toast('Settings saved')};
+  nt.onchange=()=>{$('#s-bt').disabled=nt.checked;auto()};
+  const find=async()=>{
+    const q=$('#s-place').value.trim();if(!q)return;const box=$('#s-places');box.innerHTML='<p class="small muted">Searching…</p>';
+    try{const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&name='+encodeURIComponent(q.split(',')[0]));const j=await r.json();const res=j.results||[];
+      box.innerHTML=res.length?res.map((p,i)=>`<button type="button" data-pi="${i}">${esc(p.name)}, ${esc([p.admin1,p.country].filter(Boolean).join(', '))}</button>`).join(''):'<p class="small muted">No match. Try another spelling, or enter coordinates by hand.</p>';
+      box.querySelectorAll('[data-pi]').forEach(bt=>bt.onclick=()=>{const p=res[+bt.dataset.pi];$('#s-lat').value=p.latitude;$('#s-lon').value=p.longitude;$('#s-tz').value=p.timezone||'';$('#s-place').value=[p.name,p.country].filter(Boolean).join(', ');$('#s-coord').textContent=`Using ${p.name}: ${(+p.latitude).toFixed(2)}, ${(+p.longitude).toFixed(2)}, time zone ${p.timezone||'?'}`;box.innerHTML='';collect()});
+    }catch(e){box.innerHTML='<p class="small muted">Couldn\'t search places right now. Enter coordinates by hand below.</p>'}
+  };
+  $('#s-find').onclick=find;
+  $('#s-place').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();find()}});
+  $('#s-copy').onclick=async()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$('#s-io').value=code;try{await navigator.clipboard.writeText(code);toast('Setup copied')}catch(e){$('#s-io').select();toast('Select and copy the code')}};
+  $('#s-paste').onclick=()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob($('#s-io').value.trim()))));if(typeof o!=='object'||!o)throw 0;S=loadS(o);save();render();toast('Setup loaded')}catch(e){toast('That code doesn\'t look right')}};
+  $('#s-clear').onclick=()=>{LS.keys().forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});for(const k in MEM)if(k.startsWith('c:'))delete MEM[k];toast('News will refresh')};
+}
+
+// ---------- router ----------
+const VIEWS={today:[viewToday,fillToday,'#2a1838'],news:[viewNews,fillNews,'#121212'],sky:[viewSky,null,'#0c0a22'],releases:[viewReleases,fillReleases,'#111111'],saved:[viewSaved,null,'#5a3d22'],settings:[viewSettings,bindSettings,'#2a1838']};
+let lastView='';
+function render(){
+  const v=(location.hash||'#today').slice(1),key=VIEWS[v]?v:'today';
+  document.body.dataset.v=key;
+  document.querySelector('meta[name=theme-color]').content=VIEWS[key][2];
+  const st=$('#skystars');if(key==='sky'){if(!st.innerHTML)st.innerHTML=starField(4242,140);st.style.display=''}else st.style.display='none';
+  document.querySelectorAll('#tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+key?'page':'false'));
+  const main=$('#view');
+  try{main.innerHTML=VIEWS[key][0]()}catch(e){main.innerHTML=`<div class="wrap empty">Something went wrong showing this page.</div>`;console.error(e)}
+  if(lastView!==key){window.scrollTo(0,0);lastView=key}
+  if(VIEWS[key][1])Promise.resolve(VIEWS[key][1]()).catch(e=>console.error(e));
+}
+$('#bdate').textContent=now.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+$('#gear').onclick=()=>{location.hash='#settings'};
+window.addEventListener('hashchange',render);
+render();
+try{if('serviceWorker'in navigator&&location.protocol==='https:'&&!/claude|anthropic/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
+}
+</script>
+</body>
+</html>
