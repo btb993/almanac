@@ -348,6 +348,55 @@ body[data-v=shelf]{color-scheme:dark;--bg:#24180f;--card:#33241a;--ink:#f6ead8;-
 .nowstrip small{font-size:12px;font-weight:800;color:var(--acc-ink)}
 .nowstrip b{display:block;font:600 15px/1.25 var(--lit);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nowstrip span{font-size:13px;color:var(--mute)}
+.skytabs{display:flex;gap:6px;margin:26px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.skytabs button{background:transparent;border:0;border-bottom:3px solid transparent;padding:10px 16px;min-height:46px;cursor:pointer;font:700 16px "Cinzel",Georgia,serif;color:var(--mute)}
+.skytabs button[aria-selected=true]{color:#f3e2ad;border-bottom-color:#e8c873}
+.day .dayhead{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+.daymoon{display:flex;align-items:center;gap:12px;color:var(--mute);font-size:14px}
+.daymoon svg{width:54px;height:54px}
+.dayp{font:400 clamp(17px,2vw,19px)/1.6 var(--lit);margin:16px 0;max-width:70ch}
+.dots{display:inline-flex;gap:5px}
+.dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid #e8c873}
+.dots i.on{background:#e8c873}
+.gfe{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.gfe>div{background:#ffffff08;border-radius:14px;padding:12px 16px}
+.gfe h4{margin:0 0 6px;font:700 15px "Cinzel",serif;color:#f3e2ad}
+.gfe ul{margin:0;padding-left:18px;color:var(--ink)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.wd{background:#ffffff08;border-radius:14px;padding:10px 8px;text-align:center;display:grid;gap:4px;justify-items:center}
+.wd.now{outline:1px solid #e8c873}
+.wd small{color:var(--mute);font-size:12px}
+.wd b{font:700 22px "Cinzel",serif;color:#f3e2ad}
+.wd .dots{gap:2px}.wd .dots i{width:7px;height:7px;border-width:1px}
+.wd .wg{font:18px "Segoe UI Symbol","Noto Sans Symbols","Apple Symbols",sans-serif;color:#cbbdf5}
+.wd p{margin:0;font-size:12px;line-height:1.3;color:var(--mute)}
+@media(max-width:700px){.week{grid-template-columns:minmax(0,1fr)}.wd{grid-template-columns:4.5em 2.2em auto 1.6em minmax(0,1fr);text-align:left;align-items:center;padding:8px 12px}.wd b{font-size:18px}.wd p{font-size:13px}}
+.lun{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.lun li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+.lun svg{width:30px;height:30px;margin-top:2px}
+.lun h4{margin:0 0 2px;font-size:16px}
+.lun p{margin:0;font-size:15px;color:var(--mute)}
+.bal{display:grid;gap:10px}
+.br{display:grid;grid-template-columns:minmax(0,1fr) 3.2em;gap:4px 10px;align-items:center}
+.br span{grid-column:1/-1;font-size:14px;color:var(--mute)}
+.bt{height:10px;border-radius:99px;background:#ffffff14;overflow:hidden}
+.bt i{display:block;height:100%;border-radius:99px}
+.bt .e0{background:#ff8a7c}.bt .e1{background:#c9e39a}.bt .e2{background:#f6e08a}.bt .e3{background:#9cc6ff}
+.br b{text-align:right;font-variant-numeric:tabular-nums}
+.subh{font:800 18px/1.2 var(--ui);margin:26px 0 14px;opacity:.9}
+.band .subh:first-of-type{margin-top:6px}
+.b-games .subh{font:400 13px/1.6 "Press Start 2P",monospace}
+.b-film{background:#0f0f12;background-image:radial-gradient(ellipse at 50% -20%,#3a1414 0%,transparent 60%)}
+.b-film .shelf{grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr))}
+.rc.film{background:#1b1b20;border-radius:10px;overflow:hidden;gap:0;box-shadow:0 14px 26px -14px #000}
+.film .poster{aspect-ratio:2/3;position:relative;background:#000;overflow:hidden}
+.film .poster img,.film .poster .gen{width:100%;height:100%;object-fit:cover;display:block}
+.film .pb{position:absolute;left:8px;top:8px;background:#ff4d4d;color:#fff;font-size:12px;font-weight:800;border-radius:999px;padding:2px 9px}
+.film .stub{padding:12px 14px 16px;border-top:2px dashed #ffffff30;position:relative}
+.film .stub::before,.film .stub::after{content:"";position:absolute;top:-9px;width:16px;height:16px;border-radius:50%;background:#0f0f12}
+.film .stub::before{left:-8px}.film .stub::after{right:-8px}
+.film h3{color:#fff}
+.film .ib{bottom:4px;right:2px}
 </style>
 </head>
 <body data-v="today">
@@ -373,7 +422,7 @@ body[data-v=shelf]{color-scheme:dark;--bg:#24180f;--card:#33241a;--ink:#f6ead8;-
 const STORE_OK=(()=>{try{localStorage.setItem('alm:t','1');const ok=localStorage.getItem('alm:t')==='1';localStorage.removeItem('alm:t');return ok}catch(e){return false}})();
 const MEM={};
 const LS={get(k,d){try{const v=STORE_OK?localStorage.getItem('alm:'+k):MEM[k];return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){const s=JSON.stringify(v);MEM[k]=s;if(STORE_OK)try{localStorage.setItem('alm:'+k,s)}catch(e){}},keys(){try{return STORE_OK?Object.keys(localStorage).filter(k=>k.startsWith('alm:c:')):[]}catch(e){return[]}}};
-const DEF={name:'',birth:{date:'',time:'',noTime:false,place:'',lat:null,lon:null,tz:''},topics:['science','nature','space','technology','history','upside'],custom:[],hn:true,wiki:true,artists:[],authors:[],gameGenres:[],rel:{music:true,books:true,games:true,film:true},keys:{guardian:'',nasa:'',rawg:''}};
+const DEF={name:'',birth:{date:'',time:'',noTime:false,place:'',lat:null,lon:null,tz:''},topics:['science','nature','space','technology','history','upside'],custom:[],hn:true,wiki:true,artists:[],authors:[],gameGenres:[],rel:{music:true,books:true,games:true,film:true},keys:{guardian:'',nasa:'',rawg:'',nyt:''}};
 const loadS=o=>{const s=Object.assign({},DEF,o||{});s.birth=Object.assign({},DEF.birth,s.birth||{});s.keys=Object.assign({},DEF.keys,s.keys||{});s.rel=Object.assign({},DEF.rel,s.rel||{});['topics','custom','artists','authors','gameGenres'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=DEF[k]});return s};
 let S=loadS(LS.get('settings',{}));
 const save=()=>LS.set('settings',S);
@@ -1090,6 +1139,71 @@ function moonSvg(ms){
 
 
 
+// ---------- deeper astrology ----------
+const MOONHOUSE=['Your feelings are close to the surface and you want to be seen as you are.','Comfort, food and money matters steady you today.','Your mind is busy: messages, errands and short trips fill the day.','Home and family pull at you; a quiet evening in will help.','You want fun, play and a little romance; create something.','Good for tidying, routines and looking after your body.','People matter most today; a partner or friend sets the tone.','Deep feelings stir; honest one-to-one talks go far.','You crave something bigger: learning, travel or a new idea.','Work and your reputation are in focus; others notice you.','Friends and groups lift you; reach out to your people.','A day for rest, solitude and listening to your inner voice.'];
+const MOONSIGN={fire:'Energy runs high: move your body and act on impulses that feel right.',earth:'You want things practical and steady; small chores feel satisfying.',air:'Conversations and ideas flow; good for talking things through.',water:'Feelings run deep; be gentle with yourself and others.'};
+const DO={su:'being visible and doing your own thing',mo:'home, rest and family',me:'writing, conversations and admin',ve:'love, beauty and treating yourself',ma:'exercise and bold first steps',ju:'learning, planning and generosity',sa:'careful work and long-term commitments',ur:'trying something new',ne:'art, music and meditation',pl:'deep conversations and clearing out'};
+const AVOID={su:'ego clashes',mo:'overreacting',me:'signing things in a hurry',ve:'impulse spending',ma:'arguments and rushing',ju:'overdoing it',sa:'harsh self-judgement',ur:'sudden decisions',ne:'vague promises',pl:'power struggles'};
+const NATSHORT={su:'identity',mo:'emotions',me:'mind',ve:'heart',ma:'drive',ju:'optimism',sa:'discipline',ur:'need for freedom',ne:'imagination',pl:'intensity'};
+const NATTONE={conj:'are fused and act as one',sext:'help each other when you make the effort',hard90:'pull against each other, a tension that drives you',soft:'flow together as a natural gift',hard180:'sit across a balancing act, often played out with other people'};
+const ORB={mo:5,su:3,me:3,ve:3,ma:3,ju:2.5,sa:2,ur:2,ne:2,pl:2},PW={mo:.6,su:1,me:.9,ve:1,ma:1.3,ju:1.4,sa:1.8,ur:1.7,ne:1.5,pl:1.7};
+const TB2=['mo','su','me','ve','ma','ju','sa','ur','ne','pl'];
+function aspectsAt(nat,ms){
+  const out=[],tg=Object.keys(nat.pts).filter(k=>k!=='nn'&&!(k==='mo'&&S.birth.noTime));
+  for(const t of TB2){const l=lonOf(t,ms);for(const p of tg){const sep=Math.abs(wrap(l-nat.pts[p]));for(const[A,name,kind,tone]of ASP){const orb=Math.abs(sep-A);if(orb<ORB[t]){
+    let v=kind==='soft'?1:kind==='hard'?-1:({ve:1,ju:1,su:.3,me:.2,mo:.2,ma:-.7,sa:-.9,pl:-.8,ur:-.3,ne:-.2})[t];
+    const w=PW[t]*(['su','mo','asc'].includes(p)?1.3:1)*(1-orb/ORB[t]);out.push({t,p,name,kind,tone,orb,v,w,score:v*w})}}}}
+  return out.sort((a,b)=>b.w-a.w);
+}
+const dayScore=as=>as.reduce((s,x)=>s+x.score,0);
+const stars5=sc=>Math.max(1,Math.min(5,Math.round(3+sc/1.1)));
+const houseOf=(nat,l)=>nat.hasAng?(signOf(l)-signOf(nat.pts.asc)+12)%12:-1;
+function yourDay(nat){
+  const ms=Date.now(),as=aspectsAt(nat,ms),sc=dayScore(as),st=stars5(sc),mo=lonOf('mo',ms),h=houseOf(nat,mo);
+  const head=st>=5?'A bright, easy day':st===4?'A good day with a tailwind':st===3?'A mixed, workable day':st===2?'A day that asks for patience':'A demanding day: go gently';
+  const mood=h>=0?MOONHOUSE[h]:MOONSIGN[ELEM[signOf(mo)%4]];
+  const top=as.filter(x=>x.t!=='mo').slice(0,2).concat(as.filter(x=>x.t==='mo').slice(0,1));
+  const good=[...new Set(as.filter(x=>x.v>0).map(x=>DO[x.t]))].slice(0,3),easy=[...new Set(as.filter(x=>x.v<0).map(x=>AVOID[x.t]))].slice(0,3);
+  if(!good.length)good.push(DO[['ma','su','me','mo'][signOf(mo)%4]]);
+  return{st,head,mood,top,good,easy,moSign:signOf(mo),h};
+}
+function weekAhead(nat){
+  return Array.from({length:7},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i,12);const as=aspectsAt(nat,d.getTime());const big=as.find(x=>['su','me','ve','ma'].includes(x.t))||as.find(x=>x.t==='mo')||as[0];return{d,st:stars5(dayScore(as)),mo:signOf(lonOf('mo',d.getTime())),big}});
+}
+function lunations(n){
+  const out=[],step=6*36e5;let t=Date.now(),prev=wrap(lonOf('mo',t)-lonOf('su',t)),prevF=wrap(lonOf('mo',t)-lonOf('su',t)-180);
+  for(let i=1;i<70*4&&out.length<n;i++){const tt=t+i*step,e=wrap(lonOf('mo',tt)-lonOf('su',tt)),f=wrap(lonOf('mo',tt)-lonOf('su',tt)-180);
+    if(prev<0&&e>=0&&Math.abs(e-prev)<60){const ms=tt-step*e/(e-prev);out.push({k:'New moon',ms,l:lonOf('mo',ms)})}
+    if(prevF<0&&f>=0&&Math.abs(f-prevF)<60){const ms=tt-step*f/(f-prevF);out.push({k:'Full moon',ms,l:lonOf('mo',ms)})}
+    prev=e;prevF=f}
+  return out;
+}
+function skyEvents(days){
+  const out=[],d0=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12).getTime(),D=864e5;
+  for(const k of ['me','ve','ma','ju','sa','ur','ne','pl']){
+    let l0=lonOf(k,d0),m0=wrap(lonOf(k,d0+D)-l0);
+    for(let i=1;i<=days;i++){const t=d0+i*D,l=lonOf(k,t),m=wrap(lonOf(k,t+D)-l);
+      if(Math.sign(m)!==Math.sign(m0)&&['me','ve','ma','ju','sa'].includes(k))out.push({ms:t,k,txt:m<0?`${PN[k]} turns retrograde in ${SIGNS[signOf(l)]}`:`${PN[k]} turns direct in ${SIGNS[signOf(l)]}`,kind:m<0?'hard':'soft'});
+      if(signOf(l)!==signOf(l0))out.push({ms:t,k,txt:`${PN[k]} enters ${SIGNS[signOf(l)]}`,kind:'conj',sg:signOf(l)});
+      l0=l;m0=m}
+  }
+  return out.sort((a,b)=>a.ms-b.ms);
+}
+const RETRO_TXT={me:'Double-check plans, messages and travel; good for revisiting old work.',ve:'Old flames and old tastes return; slow down big purchases.',ma:'Energy turns inward; finish projects rather than starting fights.',ju:'Growth happens on the inside; review your plans.',sa:'Time to revise commitments and structures.'};
+function balance(nat){
+  const ks=['su','mo','me','ve','ma','ju','sa','ur','ne','pl'].concat(nat.hasAng?['asc']:[]),w=k=>['su','mo','asc'].includes(k)?2:1;
+  const el=[0,0,0,0],mod=[0,0,0];ks.forEach(k=>{const s=signOf(nat.pts[k]);el[s%4]+=w(k);mod[s%3]+=w(k)});
+  return{el,mod,tot:el.reduce((a,b)=>a+b,0)};
+}
+const ELTXT=['Fire: drive, courage, enthusiasm','Earth: patience, practicality, the senses','Air: ideas, words, connection','Water: feeling, intuition, empathy'];
+const MODTXT=['Cardinal: you start things','Fixed: you see things through','Mutable: you adapt and change'];
+function natalAspects(nat){
+  const ks=['su','mo','me','ve','ma','ju','sa','ur','ne','pl'],out=[];
+  for(let i=0;i<ks.length;i++)for(let j=i+1;j<ks.length;j++){const sep=Math.abs(wrap(nat.pts[ks[i]]-nat.pts[ks[j]]));for(const[A,name]of ASP){const orb=Math.abs(sep-A);if(orb<(A===60?4:6)){if(['ur','ne','pl'].includes(ks[i])&&['ur','ne','pl'].includes(ks[j]))continue;out.push({a:ks[i],b:ks[j],A,name,orb})}}}
+  return out.sort((x,y)=>x.orb-y.orb).slice(0,8);
+}
+let skyTab='today';
+
 const HOUSES=['self and appearance','money and values','learning and conversation','home and family','creativity and romance','work and daily health','partnership','intimacy and shared resources','travel and beliefs','career and reputation','friends and community','solitude and the inner life'];
 const PHASE_NOTE=['A new beginning: a good night to set an intention.','The light is growing: take the first small step.','Halfway to full: push through the first obstacle.','Almost full: refine and adjust what you started.','Full moon: things come to light and feelings run high.','Share what you have learned and give thanks.','Last quarter: let go of what is not working.','The cycle closes: rest, reflect and clear space.'];
 const ordinal=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
@@ -1232,60 +1346,105 @@ function viewSky(){
   const retro=k=>!['su','mo','nn'].includes(k)&&wrap(lonOf(k,nowMs+864e5)-lonOf(k,nowMs))<0;
   const retros=BODIES.filter(retro).map(k=>PN[k]);
   const table=`<div class="scroll"><table><thead><tr><th>Planet</th><th>Today</th>${nat?'<th>At your birth</th>':''}</tr></thead><tbody>${BODIES.filter(k=>k!=='nn').map(k=>`<tr><td>${g(k)} ${PN[k]}</td><td>${fmtPos(sky[k])}${retro(k)?' <span class="tag t-hard">Rx</span>':''}</td>${nat?`<td>${fmtPos(nat.pts[k])}</td>`:''}</tr>`).join('')}${nat&&nat.hasAng?`<tr><td>AC Ascendant</td><td></td><td>${fmtPos(nat.pts.asc)}</td></tr><tr><td>MC Midheaven</td><td></td><td>${fmtPos(nat.pts.mc)}</td></tr>`:''}</tbody></table></div>`;
+  const lun=lunations(4),ev=skyEvents(183).slice(0,14);
+  const dd=ms=>new Date(ms).toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+  const lunHtml=`<ul class="lun">${lun.map(x=>{const h=nat?houseOf(nat,x.l):-1;return `<li><svg viewBox="-12 -12 24 24" aria-hidden="true">${x.k==='Full moon'?'<circle r="10" fill="#f4efe6"/>':'<circle r="10" fill="#0c0a22" stroke="#f4efe6" stroke-width="1.5"/>'}</svg><div><h4>${x.k} in ${SIGNS[signOf(x.l)]}</h4><p>${dd(x.ms)}${h>=0?` · your ${ordinal(h+1)} house: ${HOUSES[h]}`:''}. ${x.k==='Full moon'?'Something reaches a peak; feelings and results come to light.':'A fresh start: set an intention for the weeks ahead.'}</p></div></li>`}).join('')}</ul>`;
+  const evHtml=`<ul class="asp">${ev.map(x=>`<li><h4>${esc(x.txt)}${kindTag(x.kind).replace('challenging','retrograde').replace('supportive','direct').replace('intense','new sign')}</h4><p>${dd(x.ms)}${x.kind==='hard'?'. '+(RETRO_TXT[x.k]||''):x.kind==='soft'?'. Things start moving forward again.':nat&&nat.hasAng?`. Moves into your ${ordinal(((x.sg-signOf(nat.pts.asc)+12)%12)+1)} house: ${HOUSES[(x.sg-signOf(nat.pts.asc)+12)%12]}.`:''}</p></li>`).join('')}</ul>`;
   if(!nat){
     return `<div class="wrap skyv"><h1>The sky tonight</h1><p class="sub">Where the planets stand right now. Add your birth details to turn this into your own chart.</p>
     <div class="skyhero"><div class="wheel">${wheel(sky,0,false,false)}</div>
-    <div class="big3"><div class="callout"><b style="font:700 22px 'Cinzel',serif;color:#f3e2ad;display:block;margin-bottom:6px">Make it yours</b><p style="margin:0 0 14px;font:italic 16px/1.5 var(--lit)">Enter your birth date, time and city to see your chart, a reading of each planet, and the transits coming up for you.</p><a class="btn acc" href="#settings">Add birth details</a></div>
+    <div class="big3"><div class="callout"><b style="font:700 22px 'Cinzel',serif;color:#f3e2ad;display:block;margin-bottom:6px">Make it yours</b><p style="margin:0 0 14px;font:italic 16px/1.5 var(--lit)">Enter your birth date, time and city to get a daily reading, a week ahead, your chart explained and the transits coming up for you.</p><a class="btn acc" href="#settings">Add birth details</a></div>
     <div><small>The Moon</small><b><span>${SG[signOf(sky.mo)]}</span>${SIGNS[signOf(sky.mo)]}</b><p>${esc(moonSvg(nowMs).name)}${retros.length?`. Retrograde now: ${retros.join(', ')}.`:''}</p></div></div></div>
-    <div class="glass" style="margin-top:28px"><h2>Planets now</h2>${table}</div></div>`;
+    <div class="skygrid"><div class="glass"><h2>Moon phases</h2>${lunHtml}</div><div class="glass"><h2>Retrogrades and sign changes</h2>${evHtml}</div></div>
+    <div class="glass" style="margin-top:20px"><h2>Planets now</h2>${table}</div></div>`;
   }
-  const tr=transits(nat),P=nat.pts;
-  const seen=new Set();const today=tr.today.filter(x=>{const k=x.t+x.p+x.name;if(seen.has(k))return false;seen.add(k);return true}).slice(0,4);
+  const P=nat.pts,yd=yourDay(nat),wk=weekAhead(nat),tr=transits(nat);
+  const tline=x=>{const h=houseOf(nat,lonOf(x.t,x.ms||nowMs));return h>=0&&x.t!=='mo'?` Through your ${ordinal(h+1)} house of ${HOUSES[h]}.`:''};
   const lim={su:21,me:14,ve:21,ma:45,ju:120,sa:365,ur:365,ne:365,pl:365},slow=['ju','sa','ur','ne','pl'];
   const up=tr.up.filter(x=>x.ms<Date.now()+lim[x.t]*864e5&&!(x.t==='me'&&!['su','mo','asc','mc','me'].includes(x.p)));
   const pickUp=[...up.filter(x=>slow.includes(x.t)).slice(0,6),...up.filter(x=>!slow.includes(x.t)).slice(0,10)].sort((a,b)=>a.ms-b.ms);
-  let lastM='';const route=pickUp.map(x=>{const d=new Date(x.ms),m=d.toLocaleDateString(undefined,{month:'long',year:'numeric'});const head=m!==lastM?`<span class="mo">${esc(m)}</span>`:'';lastM=m;return `${head}<li><div class="disc"><div><b>${d.getDate()}</b><small>${esc(d.toLocaleDateString(undefined,{weekday:'short'}))}</small></div></div><div><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)} Felt for ${DUR[x.t]}.</p></div></li>`}).join('');
-  const house=l=>nat.hasAng?((signOf(l)-signOf(P.asc)+12)%12):-1;
+  let lastM='';const route=pickUp.map(x=>{const d=new Date(x.ms),m=d.toLocaleDateString(undefined,{month:'long',year:'numeric'});const head=m!==lastM?`<span class="mo">${esc(m)}</span>`:'';lastM=m;return `${head}<li><div class="disc"><div><b>${d.getDate()}</b><small>${esc(d.toLocaleDateString(undefined,{weekday:'short'}))}</small></div></div><div><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)}${tline(x)} Felt for ${DUR[x.t]}.</p></div></li>`}).join('');
   const three=[['Sun',P.su,'Who you are'],['Moon',P.mo,'What you need'+(S.birth.noTime?' (approximate)':'')],nat.hasAng?['Rising',P.asc,'How you come across']:null].filter(Boolean);
-  const reading=['su','mo','me','ve','ma','ju','sa','ur','ne','pl'].map(k=>{const sg=signOf(P[k]),h=house(P[k]);return `<li><span class="gl">${g(k)}</span><div><h4>${PN[k]} in ${SIGNS[sg]}${h>=0?`, ${ordinal(h+1)} house`:''}</h4><p>${esc(cap(NP[k]))}: ${esc(SIGNTXT[sg])}${h>=0?`, showing up most in ${esc(HOUSES[h])}`:''}.</p></div></li>`}).join('');
+  const reading=['su','mo','me','ve','ma','ju','sa','ur','ne','pl'].map(k=>{const sg=signOf(P[k]),h=houseOf(nat,P[k]);return `<li><span class="gl">${g(k)}</span><div><h4>${PN[k]} in ${SIGNS[sg]}${h>=0?`, ${ordinal(h+1)} house`:''}</h4><p>${esc(cap(NP[k]))}: ${esc(SIGNTXT[sg])}${h>=0?`, showing up most in ${esc(HOUSES[h])}`:''}.</p></div></li>`}).join('');
+  const bal=balance(nat),maxE=Math.max(...bal.el),maxM=Math.max(...bal.mod);
+  const balHtml=`<div class="bal">${bal.el.map((v,i)=>`<div class="br"><span>${ELTXT[i]}</span><div class="bt"><i class="e${i}" style="width:${Math.round(v/bal.tot*100)}%"></i></div><b>${Math.round(v/bal.tot*100)}%</b></div>`).join('')}</div><p class="small muted" style="margin:10px 0 16px">Strongest: <b style="color:#f3e2ad">${ELTXT[bal.el.indexOf(maxE)].split(':')[0]}</b>. ${MODTXT[bal.mod.indexOf(maxM)]}.</p>`;
+  const nas=natalAspects(nat),natHtml=nas.length?`<ul class="asp">${nas.map(x=>{const k=x.A===0?'conj':x.A===60?'sext':x.A===120?'soft':x.A===90?'hard90':'hard180';return `<li><h4>${g(x.a)} ${PN[x.a]} ${x.name} ${g(x.b)} ${PN[x.b]}${kindTag(x.A===90||x.A===180?'hard':x.A===0?'conj':'soft')}</h4><p>Your ${NATSHORT[x.a]} and ${NATSHORT[x.b]} ${NATTONE[k]}.</p></li>`}).join('')}</ul>`:'<p class="muted">No tight aspects.</p>';
+  const dots=n=>`<span class="dots" aria-label="${n} out of 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
+  const tabs=[['today','Today'],['ahead','Ahead'],['chart','Your chart']];
+  let body='';
+  if(skyTab==='today')body=`<div class="glass day"><div class="dayhead"><div><small class="muted">${esc(now.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}))}</small><h2 style="margin:4px 0 6px">${esc(yd.head)}</h2>${dots(yd.st)}</div><div class="daymoon"><svg viewBox="-60 -60 120 120" aria-hidden="true">${moonSvg(nowMs).svg}</svg><span>Moon in ${SIGNS[yd.moSign]}${yd.h>=0?`, your ${ordinal(yd.h+1)} house`:''}</span></div></div>
+      <p class="dayp">${esc(yd.mood)} ${yd.top.map(x=>`${PN[x.t]} ${x.name} your ${PN[x.p]} brings ${TP[x.t]} to ${NP[x.p]}.`).join(' ')}</p>
+      <div class="gfe"><div><h4>Good for</h4><ul>${yd.good.map(x=>`<li>${esc(cap(x))}</li>`).join('')}</ul></div>${yd.easy.length?`<div><h4>Go easy on</h4><ul>${yd.easy.map(x=>`<li>${esc(cap(x))}</li>`).join('')}</ul></div>`:''}</div></div>
+    <div class="glass" style="margin-top:20px"><h2>Your week</h2><div class="week">${wk.map((d,i)=>`<div class="wd${i===0?' now':''}"><small>${i===0?'Today':esc(d.d.toLocaleDateString(undefined,{weekday:'short'}))}</small><b>${d.d.getDate()}</b>${dots(d.st)}<span class="wg">${SG[d.mo]}</span><p>${d.big?`${PN[d.big.t]} ${d.big.name} ${PN[d.big.p]}`:'Quiet'}</p></div>`).join('')}</div><p class="small muted" style="margin:10px 0 0">Dots rate how easy each day feels for you; the symbol is the Moon's sign.</p></div>
+    <div class="skygrid"><div class="glass"><h2>Active now</h2>${tr.today.length?`<ul class="asp">${[...new Map(tr.today.map(x=>[x.t+x.p+x.name,x])).values()].slice(0,6).map(x=>`<li><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)}${tline(x)}</p></li>`).join('')}</ul>`:'<p class="muted" style="margin:0">A quiet sky for you today.</p>'}</div>
+      <div class="glass"><h2>Moon phases</h2>${lunHtml}</div></div>`;
+  else if(skyTab==='ahead')body=`<div class="skygrid"><div class="glass"><h2>Coming up for you</h2><p class="small muted" style="margin:-6px 0 6px">Big slow transits for the year ahead, quicker personal ones for the next few weeks.</p>${route?`<ul class="route">${route}</ul>`:'<p class="muted">No major transits in the coming weeks.</p>'}</div>
+      <div class="glass"><h2>Retrogrades and sign changes</h2><p class="small muted" style="margin:-6px 0 10px">The next six months in the sky.</p>${evHtml}</div></div>`;
+  else body=`<div class="glass"><h2>Your chart, read</h2><ul class="reading">${reading}</ul></div>
+    <div class="skygrid"><div class="glass"><h2>Your balance</h2>${balHtml}</div><div class="glass"><h2>Aspects in your chart</h2>${natHtml}</div></div>
+    <div class="glass" style="margin-top:20px"><h2>Planet positions</h2>${table}</div>`;
   return `<div class="wrap skyv"><h1>Your sky</h1><p class="sub">${esc(S.birth.place||'')}${S.birth.place?' · ':''}${esc(fmtDate(S.birth.date+'T12:00',{day:'numeric',month:'long',year:'numeric'}))}${S.birth.noTime||!S.birth.time?' · birth time unknown, so no rising sign or houses':' · '+esc(S.birth.time)}</p>
   <div class="skyhero"><div class="wheel">${wheel(P,nat.hasAng?P.asc:0,nat.hasAng,true)}<p class="small muted" style="text-align:center;margin:8px 0 0">Your birth planets inside; coral dots on the rim are today's planets.</p></div>
-    <div class="big3">${three.map(([n,l,d])=>`<div><small>${n} · ${d}</small><b><span>${SG[signOf(l)]}</span>${SIGNS[signOf(l)]}</b><p>${cap(SIGNTXT[signOf(l)])}; a ${ELEM[signOf(l)%4]} sign.</p></div>`).join('')}</div></div>
-  <div class="skygrid">
-    <div class="glass"><h2>Today for you</h2>${today.length?`<ul class="asp">${today.map(x=>`<li><h4>${PN[x.t]} ${x.name} your ${PN[x.p]}${kindTag(x.kind)}</h4><p>${aspText(x)}</p></li>`).join('')}</ul>`:'<p class="muted" style="margin:0">A quiet sky for you today: no close aspects to your chart.</p>'}<p class="small muted" style="margin:16px 0 0">The Moon is in ${SIGNS[signOf(sky.mo)]}, ${esc(moonSvg(nowMs).name.toLowerCase())}${retros.length?`. Retrograde: ${retros.join(', ')}`:''}.</p></div>
-    <div class="glass"><h2>Coming up</h2><p class="small muted" style="margin:-6px 0 6px">Big slow transits for the year ahead, quicker personal ones for the next few weeks.</p>${route?`<ul class="route">${route}</ul>`:'<p class="muted">No major transits in the coming weeks.</p>'}</div>
-  </div>
-  <div class="glass" style="margin-top:20px"><h2>Your chart, read</h2><ul class="reading">${reading}</ul></div>
-  <div class="glass" style="margin-top:20px"><h2>Planet positions</h2>${table}</div>
+    <div class="big3">${three.map(([n,l,d])=>`<div><small>${n} · ${d}</small><b><span>${SG[signOf(l)]}</span>${SIGNS[signOf(l)]}</b><p>${cap(SIGNTXT[signOf(l)])}; ${ELEM[signOf(l)%4]==='air'||ELEM[signOf(l)%4]==='earth'?'an':'a'} ${ELEM[signOf(l)%4]} sign.</p></div>`).join('')}</div></div>
+  <div class="skytabs" role="tablist">${tabs.map(([k,l])=>`<button role="tab" data-skytab="${k}" aria-selected="${skyTab===k}">${l}</button>`).join('')}</div>
+  ${body}
   <p class="small muted" style="margin-top:16px">Positions are calculated on your device to within about a degree. Readings follow traditional astrology and are offered for reflection and fun.</p></div>`;
 }
+document.addEventListener('click',e=>{const b=e.target.closest('[data-skytab]');if(!b)return;skyTab=b.dataset.skytab;const y=scrollY;render();scrollTo(0,y)});
 
 // ---------- RELEASES ----------
 const soon=d=>{if(!d)return '';const n=Math.round((new Date(d+'T12:00')-now)/864e5);return n>1?`in ${n} days`:n===1?'tomorrow':n===0?'out today':''};
 function rcard(it,style){REG[it.id]=it;const t=it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>`:esc(it.title);
-  const im=it.img?`<img src="${esc(it.img)}" alt="" loading="lazy" data-fb="${esc(it.title.slice(0,40))}" data-bg="${esc(genBg(it.title))}">`:`<div class="gen" style="background:${genBg(it.title)}">${esc(it.title.slice(0,40))}</div>`;
+  const im=it.img?`<img src="${esc(it.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-fb="${esc(it.title.slice(0,40))}" data-bg="${esc(genBg(it.title))}">`:`<div class="gen" style="background:${genBg(it.title)}">${esc(it.title.slice(0,40))}</div>`;
   const b=it.badge?`<span class="badge">${esc(it.badge)}</span>`:'';
   if(style==='music')return `<article class="rc"><div class="sleeve"><div class="disc"></div><div class="art">${im}</div></div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
   if(style==='books')return `<article class="rc"><div class="cover">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.7">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
   if(style==='games')return `<article class="rc"><div class="cart">${im}</div>${b}<h3>${t}</h3><p>${esc(it.text||'')}</p><p class="small" style="opacity:.75">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
-  return `<article class="rc ticket"><span class="adm">${esc(it.badge?it.badge:'Admit one')}</span><h3>${t}</h3><p>${esc((it.text||'').slice(0,140))}</p><p class="small" style="opacity:.6">${esc(it.src||'')}</p>${saveBtn(it)}</article>`;
+  return `<article class="rc film"><div class="poster">${im}${it.badge?`<span class="pb">${esc(it.badge)}</span>`:''}</div><div class="stub"><h3>${t}</h3><p>${esc((it.text||'').slice(0,120))}</p><p class="small" style="opacity:.65">${esc(it.src||'')}</p></div>${saveBtn(it)}</article>`;
 }
+const upImg=u=>typeof u==='string'&&/^https?:\/\/[^\s"'<>]+$/.test(u)?u.replace(/^http:/,'https:'):'';
+const strHash=s=>{let h=5381;for(const c of String(s))h=(h*33^c.charCodeAt(0))>>>0;return h.toString(36)};
+async function wikiImages(titles){
+  const map={};
+  for(let i=0;i<titles.length;i+=20){const part=titles.slice(i,i+20);
+    try{const j=await getJSON('https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=500&redirects=1&titles='+encodeURIComponent(part.join('|')),'wpi:'+strHash(part.join('|')),72);
+      const back={};(j.query?.normalized||[]).forEach(n=>back[n.to]=n.from);(j.query?.redirects||[]).forEach(n=>back[n.to]=n.from);
+      (j.query?.pages||[]).forEach(p=>{const src=p.thumbnail?.source;if(!src)return;let t=p.title;map[t]=src;while(back[t]){t=back[t];map[t]=src}});
+    }catch(e){}}
+  return map;
+}
+async function wdUpcoming(cls,minLinks,days,id){
+  const to=new Date(now);to.setDate(to.getDate()+days);
+  const q=`SELECT ?item ?itemLabel ?article ?links (MIN(?d) AS ?date) WHERE {
+?item wdt:P31 wd:${cls}; p:P577 ?st. ?st psv:P577 [wikibase:timeValue ?d; wikibase:timePrecision ?pr]. FILTER(?pr >= 11)
+FILTER(?d >= "${TODAY}T00:00:00Z"^^xsd:dateTime && ?d < "${ymd(to)}T00:00:00Z"^^xsd:dateTime)
+FILTER NOT EXISTS { ?item wdt:P577 ?old. FILTER(?old < "${TODAY}T00:00:00Z"^^xsd:dateTime) }
+?item wikibase:sitelinks ?links. FILTER(?links >= ${minLinks})
+?article schema:about ?item; schema:isPartOf <https://en.wikipedia.org/>.
+SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } }
+GROUP BY ?item ?itemLabel ?article ?links ORDER BY DESC(?links) LIMIT 24`;
+  const j=await getJSON('https://query.wikidata.org/sparql?format=json&query='+encodeURIComponent(q),'wd:'+id+':'+TODAY,24);
+  const rows=(j.results?.bindings||[]).map(b=>({title:b.itemLabel?.value||'',date:(b.date?.value||'').slice(0,10),wiki:b.article?.value||''})).filter(r=>r.title&&r.date);
+  const titles=rows.map(r=>{try{return decodeURIComponent(r.wiki.split('/wiki/')[1]||'').replace(/_/g,' ')}catch(e){return ''}});
+  const imgs=await wikiImages(titles.filter(Boolean));
+  return rows.map((r,i)=>Object.assign(r,{img:imgs[titles[i]]||''})).sort((a,b)=>a.date.localeCompare(b.date));
+}
+const titleCase=s=>String(s||'').toLowerCase().replace(/\b([a-z])/g,m=>m.toUpperCase()).replace(/'S\b/g,"'s");
 function viewReleases(){
   const r=S.rel,bl=[];
-  if(r.music)bl.push(['music','Music',S.artists.length?`New and upcoming from ${S.artists.slice(0,4).join(', ')}${S.artists.length>4?' and more':''}, plus this week's album reviews.`:'This week\'s album reviews. Add your favourite artists in Settings to follow their new releases.']);
-  if(r.books)bl.push(['books','Books',S.authors.length||(LIB&&LIB.books.length)?`New books from ${S.authors.length?S.authors.slice(0,3).join(', ')+' and ':''}the authors on your Book Nook shelves, plus new book reviews.`:'New book reviews. Add favourite authors in Settings to follow their new books.']);
-  if(r.games)bl.push(['games','Games',S.keys.rawg?'The release calendar for the next three months'+(S.gameGenres.length?', in your genres':'')+', plus reviews.':'Game news and reviews. Add a free RAWG key in Settings for a full release calendar.']);
-  if(r.film)bl.push(['film','Film & TV','Next episodes of the shows on your Front Row, films from your watchlist coming out, and fresh reviews.']);
-  return `<section class="rel-hero"><div class="wrap"><h1>New <span>for you</span></h1><p>Records, books, games and films, picked from what you follow.</p></div></section>
-  ${bl.length?bl.map(([id,t,d])=>`<section class="band b-${id}"><div class="wrap"><h2>${t}</h2><p class="bsub">${esc(d)}</p><div class="shelf" data-rel="${id}"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div></section>`).join(''):`<div class="wrap empty">Choose what to follow in <a href="#settings">Settings</a>.</div>`}`;
+  const sub=(id,label)=>`<h3 class="subh">${label}</h3><div class="shelf" data-rel="${id}"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+  if(r.music)bl.push(['music','Music',S.artists.length?`New and upcoming from ${S.artists.slice(0,4).join(', ')}${S.artists.length>4?' and more':''}, plus this week's album reviews.`:'This week\'s album reviews. Add your favourite artists in Settings to follow their new releases.',sub('music','New for you')]);
+  if(r.books)bl.push(['books','Books','New and upcoming books from the authors you read, your Book Nook alerts, the bestseller lists and this week\'s reviews.',sub('books','From authors you read')+sub('nyt','Bestsellers this week')+sub('bookrev','Reviewed this week')]);
+  if(r.games)bl.push(['games','Games','Big releases coming up, games from your wishlist, and the latest reviews.',sub('games','Coming soon')+sub('gamerev','Reviews and news')]);
+  if(r.film)bl.push(['film','Film & TV','Next episodes of your shows, films from your watchlist, big releases coming to cinemas and the latest reviews.',sub('tv','Next episodes for you')+sub('film','Coming to cinemas')+sub('filmrev','Reviewed this week')]);
+  return `<section class="rel-hero"><div class="wrap"><h1>New <span>for you</span></h1><p>Records, books, games, films and shows, picked from what you follow and what's on your shelves.</p></div></section>
+  ${bl.length?bl.map(([id,t,d,inner])=>`<section class="band b-${id}"><div class="wrap"><h2>${t}</h2><p class="bsub">${esc(d)}</p>${inner}</div></section>`).join(''):`<div class="wrap empty">Choose what to follow in <a href="#settings">Settings</a>.</div>`}`;
 }
 async function fillReleases(){
-  const put=(id,items,msg)=>{const b=document.querySelector(`[data-rel="${id}"]`);if(b)b.innerHTML=items.length?items.map(x=>rcard(x,id)).join(''):`<p class="err">${msg||'Nothing found right now.'}</p>`};
+  const put=(id,style,items,msg)=>{const b=document.querySelector(`[data-rel="${id}"]`);if(!b)return;if(!items.length&&msg===null){const h=b.previousElementSibling;if(h&&h.classList.contains('subh'))h.remove();b.remove();return}b.innerHTML=items.length?items.map(x=>rcard(x,style)).join(''):`<p class="err">${msg||'Nothing found right now.'}</p>`};
   const from=new Date(now);from.setDate(from.getDate()-120);const fromS=ymd(from);const jobs=[];
   const L=await Promise.race([loadLib().catch(()=>null),sleep(8000).then(()=>null)]);
-  const cnt={};(L?.books||[]).filter(b=>(b.st==='read'||b.st==='reading')&&b.a).forEach(b=>{const a=b.a.split(/,|&| and /)[0].trim();if(a)cnt[a]=(cnt[a]||0)+1});
-  const libAuthors=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
-  const authors=[...new Set([...S.authors,...libAuthors])].slice(0,8);
+  const dShort=d=>fmtDate(d+'T12:00',{day:'numeric',month:'short',year:'numeric'});
   if(S.rel.music)jobs.push((async()=>{
     let items=[];
     for(const a of S.artists.slice(0,10)){
@@ -1297,38 +1456,73 @@ async function fillReleases(){
     }
     items.sort((a,b)=>(b.d||'').localeCompare(a.d||''));
     try{items=items.concat(await guardian('albums',{section:'music',tag:'tone/albumreview'},'album review',8))}catch(e){}
-    put('music',items.slice(0,16));
+    put('music','music',items.slice(0,16));
   })());
-  if(S.rel.books)jobs.push((async()=>{
-    let items=[];
-    for(const a of authors){
-      try{const j=await getJSON('https://openlibrary.org/search.json?sort=new&limit=4&fields=key,title,first_publish_year,cover_i,author_name&author='+encodeURIComponent(a),'ol:'+a+':'+TODAY,24);
-        (j.docs||[]).filter(d=>d.first_publish_year>=now.getFullYear()-2).forEach(d=>items.push({id:'ol:'+d.key,kind:'Book',title:d.title,text:(d.author_name||[]).join(', '),img:d.cover_i?`https://covers.openlibrary.org/b/id/${encodeURIComponent(d.cover_i)}-M.jpg`:'',url:'https://openlibrary.org'+String(d.key).replace(/[^\w/]/g,''),src:`Open Library · ${d.first_publish_year}`,badge:d.first_publish_year>=now.getFullYear()?'new this year':''}));
-      }catch(e){}
-      await sleep(300);
-    }
-    try{items=items.concat((await guardian('bookrev',{section:'books',tag:'tone/reviews'},'book review',10)).map(x=>Object.assign(x,{badge:'review'})))}catch(e){}
-    put('books',items.slice(0,16));
-  })());
-  if(S.rel.games)jobs.push((async()=>{
-    let items=(L?.games||[]).filter(g=>(g.st==='wishlist'||g.st==='backlog')&&/^\d{4}-\d{2}-\d{2}/.test(g.rel)&&g.rel.slice(0,10)>=TODAY).sort((a,b)=>a.rel.localeCompare(b.rel)).map(g=>({id:'wl:'+g.id,kind:'Game',title:g.t,text:'On your wishlist',img:g.c,url:APPS.games,src:'Out '+fmtDate(g.rel.slice(0,10)+'T12:00',{day:'numeric',month:'short',year:'numeric'}),badge:soon(g.rel.slice(0,10))||'coming soon'}));
-    if(S.keys.rawg){try{const to=new Date(now);to.setDate(to.getDate()+90);
-      const j=await getJSON(`https://api.rawg.io/api/games?key=${encodeURIComponent(S.keys.rawg)}&dates=${TODAY},${ymd(to)}&ordering=-added&page_size=15${S.gameGenres.length?'&genres='+encodeURIComponent(S.gameGenres.join(',')):''}`,'rawg:'+S.gameGenres.join(',')+':'+TODAY,12);
-      items=(j.results||[]).map(x=>({id:'rw:'+x.id,kind:'Game',title:x.name,text:[(x.genres||[]).map(g=>g.name).join(', '),(x.platforms||[]).map(p=>p.platform.name).slice(0,4).join(', ')].filter(Boolean).join(' · '),img:safeUrl(x.background_image),url:'https://rawg.io/games/'+encodeURIComponent(x.slug),src:'Out '+fmtDate(x.released+'T12:00',{day:'numeric',month:'short'}),badge:soon(x.released)}));
-    }catch(e){}}
-    try{items=items.concat(await guardian('games',{section:'games'},'video games',9))}catch(e){}
-    put('games',items.slice(0,18));
-  })());
-  if(S.rel.film)jobs.push((async()=>{
-    let items=[];
-    const shows=(L?.watch||[]).filter(w=>w.ty==='tv'&&w.tm&&(w.st==='watching'||w.st==='watched'||w.st==='want')).slice(0,14);
-    for(const w of shows){try{const j=await getJSON(`https://api.tvmaze.com/shows/${encodeURIComponent(w.tm)}?embed=nextepisode`,'tvm:'+w.tm+':'+TODAY,12);const ep=j?._embedded?.nextepisode;
-      if(ep&&ep.airdate)items.push({id:'tv:'+ep.id,kind:'TV',title:j.name||w.t,text:`Season ${ep.season}, episode ${ep.number}${ep.name?': '+ep.name:''}`,url:safeUrl(ep.url)||APPS.watch,src:'Airs '+fmtDate(ep.airdate+'T12:00',{weekday:'short',day:'numeric',month:'short'}),badge:soon(ep.airdate)||'',d:ep.airdate});}catch(e){}}
-    items.sort((a,b)=>a.d.localeCompare(b.d));
-    (L?.watch||[]).filter(w=>w.st==='want'&&w.ty!=='tv'&&/^\d{4}-\d{2}-\d{2}/.test(w.rel)&&w.rel.slice(0,10)>=TODAY).forEach(w=>items.push({id:'fr:'+w.id,kind:'Film',title:w.t,text:'On your watchlist',url:APPS.watch,src:'Out '+fmtDate(w.rel.slice(0,10)+'T12:00',{day:'numeric',month:'short'}),badge:soon(w.rel.slice(0,10))}));
-    try{items=items.concat(await guardian('film',{section:'film',tag:'tone/reviews'},'film review',12))}catch(e){}
-    put('film',items.slice(0,20),'Couldn\'t load film and TV news right now.');
-  })());
+  if(S.rel.books){
+    jobs.push((async()=>{
+      const lib=L?.books||[],have=new Set(lib.map(b=>b.t.toLowerCase().replace(/[^a-z0-9]/g,'')));
+      const sc={};lib.forEach(b=>{if(!b.a)return;const a=b.a.split(/,|&| and /)[0].trim();if(!a)return;const w=b.st==='read'?(b.r>=4?2:b.r&&b.r<3?-1:.8):b.st==='reading'?1.5:.4;sc[a]=(sc[a]||0)+w});
+      const authors=[...new Set([...S.authors,...Object.entries(sc).filter(x=>x[1]>=1.5).sort((a,b)=>b[1]-a[1]).map(x=>x[0])])].slice(0,10);
+      const items=[],seen=new Set(),lo=new Date(now),hi=new Date(now);lo.setDate(lo.getDate()-150);hi.setDate(hi.getDate()+540);
+      const add=it=>{const k=it.title.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,40);if(!k||seen.has(k)||have.has(k))return;seen.add(k);items.push(it)};
+      const alerts=rawGet('reading-ledger-releases',null);
+      (alerts?.items||[]).forEach(x=>{if(!x.title||!x.date)return;add({id:'bn:'+x.key,kind:'Book',title:x.title,text:x.author||'',img:x.coverId?`https://covers.openlibrary.org/b/id/${encodeURIComponent(x.coverId)}-L.jpg`:'',url:x.olKey?'https://openlibrary.org'+String(x.olKey).replace(/[^\w/]/g,''):APPS.books,src:'Book Nook alert · '+dShort(x.date),badge:x.date>TODAY?soon(x.date)||'coming soon':'new',d:x.date})});
+      for(const a of authors){
+        try{const j=await getJSON(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent('inauthor:"'+a+'"')}&orderBy=newest&maxResults=20&printType=books&langRestrict=en`,'gb:'+a+':'+TODAY,24);
+          const last=a.toLowerCase().split(' ').pop();
+          for(const v of j.items||[]){const x=v.volumeInfo||{},pd=x.publishedDate||'';if(!/^\d{4}-\d{2}/.test(pd))continue;
+            const d=new Date((pd.length===7?pd+'-01':pd.slice(0,10))+'T12:00');if(d<lo||d>hi)continue;
+            if(!(x.authors||[]).some(n=>n.toLowerCase().includes(last)))continue;
+            if(/summary|study guide|boxed set|box set|collection set/i.test(x.title||''))continue;
+            const ds=ymd(d);add({id:'gb:'+v.id,kind:'Book',title:x.title+(x.subtitle&&x.subtitle.length<36?': '+x.subtitle:''),text:(x.authors||[]).join(', '),img:upImg(x.imageLinks?.thumbnail||x.imageLinks?.smallThumbnail).replace('&edge=curl','').replace('zoom=1','zoom=2'),url:upImg(x.infoLink)||'',src:(ds>TODAY?'Out ':'Published ')+dShort(ds),badge:ds>TODAY?soon(ds)||'coming soon':'new',d:ds})}
+        }catch(e){}
+        await sleep(150);
+      }
+      items.sort((a,b)=>(b.d>TODAY)-(a.d>TODAY)||(b.d>TODAY?a.d.localeCompare(b.d):b.d.localeCompare(a.d)));
+      put('books','books',items.slice(0,18),authors.length?'No new books from your authors right now.':'Add favourite authors in Settings, or read a few books in Book Nook, and their new releases appear here.');
+    })());
+    jobs.push((async()=>{
+      const k=S.keys.nyt||rawGet('reading-ledger-nytkey','');
+      if(!k||typeof k!=='string'){put('nyt','books',[],null);return}
+      const out=[];
+      for(const [list,lab] of [['hardcover-fiction','Fiction'],['hardcover-nonfiction','Nonfiction']]){
+        try{const j=await getJSON(`https://api.nytimes.com/svc/books/v3/lists/current/${list}.json?api-key=${encodeURIComponent(k)}`,'nyt:'+list+':'+TODAY,12);
+          (j.results?.books||[]).slice(0,7).forEach(b=>out.push({id:'nyt:'+(b.primary_isbn13||b.title),kind:'Book',title:titleCase(b.title),text:b.author||'',img:upImg(b.book_image),url:upImg(b.amazon_product_url),src:`#${b.rank} ${lab}${b.weeks_on_list>1?` · ${b.weeks_on_list} weeks`:''}`,badge:b.weeks_on_list<=1?'new this week':''}))}catch(e){}
+        await sleep(300);
+      }
+      put('nyt','books',out,out.length?'':null);
+    })());
+    jobs.push((async()=>{try{put('bookrev','books',(await guardian('bookrev',{section:'books',tag:'tone/reviews'},'book review',12)).map(x=>Object.assign(x,{badge:'review'})))}catch(e){put('bookrev','books',[],'Couldn\'t load reviews right now.')}})());
+  }
+  if(S.rel.games){
+    jobs.push((async()=>{
+      let items=(L?.games||[]).filter(g=>(g.st==='wishlist'||g.st==='backlog')&&/^\d{4}-\d{2}-\d{2}/.test(g.rel)&&g.rel.slice(0,10)>=TODAY).sort((a,b)=>a.rel.localeCompare(b.rel)).map(g=>({id:'wl:'+g.id,kind:'Game',title:g.t,text:'On your wishlist',img:g.c,url:APPS.games,src:'Out '+dShort(g.rel.slice(0,10)),badge:soon(g.rel.slice(0,10))||'coming soon'}));
+      const have=new Set((L?.games||[]).map(g=>g.t.toLowerCase()));
+      if(S.keys.rawg){try{const to=new Date(now);to.setDate(to.getDate()+90);
+        const j=await getJSON(`https://api.rawg.io/api/games?key=${encodeURIComponent(S.keys.rawg)}&dates=${TODAY},${ymd(to)}&ordering=-added&page_size=15${S.gameGenres.length?'&genres='+encodeURIComponent(S.gameGenres.join(',')):''}`,'rawg:'+S.gameGenres.join(',')+':'+TODAY,12);
+        (j.results||[]).forEach(x=>{if(!have.has(String(x.name).toLowerCase()))items.push({id:'rw:'+x.id,kind:'Game',title:x.name,text:(x.genres||[]).map(g=>g.name).join(', '),img:upImg(x.background_image),url:'https://rawg.io/games/'+encodeURIComponent(x.slug),src:'Out '+dShort(x.released),badge:soon(x.released)})})}catch(e){}}
+      try{(await wdUpcoming('Q7889',10,200,'games')).forEach(r=>{if(have.has(r.title.toLowerCase())||items.some(i=>i.title.toLowerCase()===r.title.toLowerCase()))return;items.push({id:'wdg:'+r.title,kind:'Game',title:r.title,text:'',img:r.img,url:upImg(r.wiki),src:'Out '+dShort(r.date),badge:soon(r.date)||'coming soon'})})}catch(e){}
+      put('games','games',items.slice(0,18),'Couldn\'t load upcoming games right now.');
+    })());
+    jobs.push((async()=>{try{put('gamerev','games',await guardian('games',{section:'games'},'video games',9))}catch(e){put('gamerev','games',[],'Couldn\'t load game news right now.')}})());
+  }
+  if(S.rel.film){
+    jobs.push((async()=>{
+      const items=[];
+      const shows=(L?.watch||[]).filter(w=>w.ty==='tv'&&w.tm&&(w.st==='watching'||w.st==='watched'||w.st==='want')).slice(0,16);
+      for(const w of shows){try{const j=await getJSON(`https://api.tvmaze.com/shows/${encodeURIComponent(w.tm)}?embed=nextepisode`,'tvm:'+w.tm+':'+TODAY,12);const ep=j?._embedded?.nextepisode;
+        if(ep&&ep.airdate)items.push({id:'tv:'+ep.id,kind:'TV',title:j.name||w.t,text:`Season ${ep.season}, episode ${ep.number}${ep.name?': '+ep.name:''}`,img:upImg(j.image?.medium)||w.c,url:upImg(ep.url)||APPS.watch,src:'Airs '+fmtDate(ep.airdate+'T12:00',{weekday:'short',day:'numeric',month:'short'}),badge:soon(ep.airdate)||'',d:ep.airdate});}catch(e){}}
+      items.sort((a,b)=>a.d.localeCompare(b.d));
+      put('tv','film',items,shows.length?'None of your shows has a new episode scheduled yet.':null);
+    })());
+    jobs.push((async()=>{
+      const items=(L?.watch||[]).filter(w=>w.st==='want'&&w.ty!=='tv'&&/^\d{4}-\d{2}-\d{2}/.test(w.rel)&&w.rel.slice(0,10)>=TODAY).map(w=>({id:'fr:'+w.id,kind:'Film',title:w.t,text:'On your watchlist',img:w.c,url:APPS.watch,src:'Out '+dShort(w.rel.slice(0,10)),badge:soon(w.rel.slice(0,10))}));
+      const have=new Set((L?.watch||[]).map(w=>w.t.toLowerCase()));
+      try{(await wdUpcoming('Q11424',25,120,'films')).forEach(r=>{if(have.has(r.title.toLowerCase()))return;items.push({id:'wdf:'+r.title,kind:'Film',title:r.title,text:'',img:r.img,url:upImg(r.wiki),src:'Out '+dShort(r.date),badge:soon(r.date)||'coming soon'})})}catch(e){}
+      put('film','film',items.slice(0,18),'Couldn\'t load upcoming films right now.');
+    })());
+    jobs.push((async()=>{try{put('filmrev','film',await guardian('film',{section:'film',tag:'tone/reviews'},'film review',12))}catch(e){put('filmrev','film',[],'Couldn\'t load reviews right now.')}})());
+  }
   await Promise.all(jobs);
 }
 
@@ -1366,6 +1560,7 @@ function viewSettings(){
     <fieldset><legend>Free keys (optional)</legend><p class="small muted" style="margin:0">Everything works without these, using shared demo access that can run out. Free personal keys make it reliable.</p>
       <label class="f" for="s-kg">Guardian key<span class="h">Free at open-platform.theguardian.com (developer key)</span><input type="password" id="s-kg" value="${esc(S.keys.guardian)}"></label>
       <label class="f" for="s-kn">NASA key<span class="h">Free at api.nasa.gov</span><input type="password" id="s-kn" value="${esc(S.keys.nasa)}"></label>
+      <label class="f" for="s-ky">New York Times key for bestseller lists<span class="h">Uses your Book Nook key automatically if you set one there. Free at developer.nytimes.com</span><input type="password" id="s-ky" value="${esc(S.keys.nyt||'')}"></label>
       <label class="f" for="s-kr">RAWG key for game releases<span class="h">Free at rawg.io/apidocs</span><input type="password" id="s-kr" value="${esc(S.keys.rawg)}"></label></fieldset>
     <fieldset><legend>Move to another device</legend>
       <div class="row"><button type="button" class="btn ghost" id="s-copy">Copy my setup</button><button type="button" class="btn ghost" id="s-paste">Paste a setup</button><button type="button" class="btn ghost" id="s-clear">Refresh all news now</button></div>
@@ -1385,7 +1580,7 @@ function bindSettings(){
     S.topics=all('topic');const src=all('src');S.hn=src.includes('hn');S.wiki=src.includes('wiki');S.custom=list($('#s-custom').value).slice(0,8);
     const rel=all('rel');S.rel={music:rel.includes('music'),books:rel.includes('books'),games:rel.includes('games'),film:rel.includes('film')};
     S.artists=list($('#s-art').value).slice(0,10);S.authors=list($('#s-auth').value).slice(0,8);S.gameGenres=all('genre');
-    S.keys={guardian:$('#s-kg').value.trim(),nasa:$('#s-kn').value.trim(),rawg:$('#s-kr').value.trim()};
+    S.keys={guardian:$('#s-kg').value.trim(),nasa:$('#s-kn').value.trim(),rawg:$('#s-kr').value.trim(),nyt:$('#s-ky').value.trim()};
     save();
     const ok=LS.get('settings',{}).birth?.date===S.birth.date;
     $('#s-msg').textContent=ok?'Saved ✓':'Could not save on this device';
@@ -1422,12 +1617,12 @@ async function sb(){
   sbClient=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'reading-ledger-auth'}});
   return sbClient;
 }
-const okImg=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+const okImg=u=>typeof u!=='string'?'':/^data:image\/[a-z+]+;base64,[A-Za-z0-9+/=]+$/.test(u)?u:/^https?:\/\/[^\s"'<>]+$/.test(u)?u.replace(/^http:/,'https:'):'';
 const alive=(list,del)=>(Array.isArray(list)?list:[]).filter(x=>x&&x.id!=null&&!(del&&del[x.id]&&del[x.id]>=(x.updatedAt||0)));
 const tmId=v=>v&&typeof v==='object'?v.id:v;
 const nb=b=>({id:'b'+b.id,t:b.title||'Untitled',a:b.author||'',st:b.shelf||'',p:+b.pages||0,cp:+b.currentPage||0,f:String(b.finished||''),r:+b.rating||0,c:okImg(b.cover)});
-const ng=g=>({id:'g'+g.id,t:g.title||'Untitled',st:g.status||'',h:+g.hours||0,f:String(g.finished||''),r:+g.rating||0,c:okImg(g.cover)||okImg(g.coverPick)||(g.steamAppId?`https://cdn.cloudflare.steamstatic.com/steam/apps/${encodeURIComponent(g.steamAppId)}/library_600x900_2x.jpg`:''),rel:typeof g.release==='string'?g.release:''});
-const nw=w=>({id:'w'+w.id,t:w.title||'Untitled',ty:w.type||'movie',st:w.status||'',s:+w.season||0,e:+w.episode||0,f:String(w.finished||''),r:+w.rating||0,c:okImg(w.poster),y:w.year||'',tm:tmId(w.tvmaze),ns:typeof w.nextSeason==='string'?w.nextSeason:'',rel:typeof w.release==='string'?w.release:''});
+const ng=g=>({id:'g'+g.id,t:g.title||'Untitled',st:g.status||'',h:+g.hours||0,f:String(g.finished||''),r:+g.rating||0,c:okImg(g.cover)||okImg(g.coverPick)||(g.steamAppId?`https://cdn.cloudflare.steamstatic.com/steam/apps/${encodeURIComponent(g.steamAppId)}/library_600x900_2x.jpg`:'')||okImg(g.coverUrl)||(g.steamAppId?`https://cdn.cloudflare.steamstatic.com/steam/apps/${encodeURIComponent(g.steamAppId)}/library_600x900_2x.jpg`:''),rel:typeof g.release==='string'?g.release:''});
+const nw=w=>({id:'w'+w.id,t:w.title||'Untitled',ty:w.type||'movie',st:w.status||'',s:+w.season||0,e:+w.episode||0,f:String(w.finished||''),r:+w.rating||0,c:okImg(w.poster)||okImg(w.poster?.url)||okImg(w.image),y:w.year||'',tm:tmId(w.tvmaze),ns:typeof w.nextSeason==='string'?w.nextSeason:'',rel:typeof w.release==='string'?w.release:''});
 async function loadLib(force){
   if(LIB&&!force)return LIB;
   if(libP&&!force)return libP;
